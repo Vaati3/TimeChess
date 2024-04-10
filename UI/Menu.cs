@@ -5,13 +5,12 @@ public class Menu : Control
 {
 	public override void _Ready()
 	{
-		
 	}
 
 	//Buttons Signals
 	public void _on_PlayBtn_pressed()
 	{
-		GD.Print("Start Game");
+		GetTree().ChangeScene("res://Game/Board.tscn");
 	}
 	public void _on_OptionBtn_pressed()
 	{
