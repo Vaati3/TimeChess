@@ -43,11 +43,11 @@ layer = -100
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="Control" type="Control" parent="CanvasLayer"]
+[node name="BoardControl" type="Control" parent="CanvasLayer"]
 margin_right = 400.0
 margin_bottom = 400.0
 
-[node name="TileMap" type="TileMap" parent="CanvasLayer/Control"]
+[node name="TileMap" type="TileMap" parent="CanvasLayer/BoardControl"]
 position = Vector2( 2, 0 )
 tile_set = SubResource( 1 )
 cell_size = Vector2( 50, 50 )

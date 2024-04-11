@@ -21,6 +21,38 @@ public class Board : Node2D
         {
             InstanciatePiece(scene, "Pawn", Colour.Black, x, 1);
             InstanciatePiece(scene, "Pawn", Colour.White, x, 6);
+
+            string type = "King";
+            switch (x){
+                case 0: case 7:
+                    type = "Rook"; break;
+                case 1: case 6:
+                    type = "Knight"; break;
+                case 2: case 5:
+                    type = "Bishop"; break;
+                case 4:
+                    type = "Queen"; break;
+            }
+            InstanciatePiece(scene, type, Colour.Black, x, 0);
+            InstanciatePiece(scene, type, Colour.White, x, 7);
+        }
+    }
+
+    private void ScaleBoard(float scale)
+    {
+        Vector2 scaleVector = new Vector2(scale, scale);
+        Control boardControl = GetNode<Control>("CanvasLayer/BoardControl");
+        boardControl.RectScale = scaleVector;
+
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                if (pieces[x,y] != null)
+                {
+                    pieces[x,y].Scale = scaleVector;
+                }
+            }
         }
     }
 
