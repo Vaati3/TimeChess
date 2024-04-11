@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 public class Rook : Piece
 {
-    public override void Init(Colour colour, int x, int y)
+    public override void Init(Board board, Colour colour, int x, int y)
     {
-        base.Init(colour, x, y);
+        base.Init(board, colour, x, y);
         if (colour == Colour.Black)
         {
             GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://Game/Pieces/Sprites/BlackRook.png");
@@ -15,9 +15,9 @@ public class Rook : Piece
         }
     }
 
-    public override List<tile> GetPosibleMoves(ref Piece[,] pieces)
+    public override List<Move> GetPosibleMoves()
     {
-        List<tile> test = new List<tile>();
+        List<Move> test = new List<Move>();
     
         return test;
     }

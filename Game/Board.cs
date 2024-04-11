@@ -3,7 +3,8 @@ using System;
 
 public class Board : Node2D
 {
-    private Piece[,] pieces;
+    public float tileSize { get; private set;}
+    public Piece[,] pieces { get; private set;}
 
     private void InstanciatePiece(PackedScene scene, string type, Colour colour, int x, int y)
     {
@@ -11,7 +12,7 @@ public class Board : Node2D
         ulong id = inst.GetInstanceId();
         inst.SetScript(GD.Load<Script>("res://Game/Pieces/" + type + ".cs")); //SetProcess(true); to activate process after SetScript
         pieces[x,y] = (Piece)GD.InstanceFromId(id);
-        pieces[x,y].Init(colour, x, y);
+        pieces[x,y].Init(this, colour, x, y);
         AddChild(pieces[x,y]);
     }
     private void ResetPieces()
@@ -23,7 +24,7 @@ public class Board : Node2D
             InstanciatePiece(scene, "Pawn", Colour.White, x, 6);
 
             string type = "King";
-            switch (x){
+            switch (x) {
                 case 0: case 7:
                     type = "Rook"; break;
                 case 1: case 6:
@@ -40,6 +41,7 @@ public class Board : Node2D
 
     private void ScaleBoard(float scale)
     {
+        tileSize *= scale;
         Vector2 scaleVector = new Vector2(scale, scale);
         Control boardControl = GetNode<Control>("CanvasLayer/BoardControl");
         boardControl.RectScale = scaleVector;
@@ -50,7 +52,7 @@ public class Board : Node2D
             {
                 if (pieces[x,y] != null)
                 {
-                    pieces[x,y].Scale = scaleVector;
+                    pieces[x,y].UpdateScale(scaleVector);
                 }
             }
         }
@@ -58,7 +60,9 @@ public class Board : Node2D
 
     public override void _Ready()
     {
+        tileSize = 50;
         pieces = new Piece[8,8];
         ResetPieces();
+        ScaleBoard(1.5f);
     }
 }
