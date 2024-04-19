@@ -1,6 +1,21 @@
 using Godot;
 using System;
 
+public struct Vector2i
+{
+    public int x;
+    public int y;
+    public Vector2i(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+    static public Vector2 operator *(Vector2i pos, float n)
+    {
+        return new Vector2((float)pos.x * n, (float)pos.y * n);
+    }
+}
+
 public class Board : Node2D
 {
     public float tileSize { get; private set;}
