@@ -17,8 +17,6 @@ public class Bishop : Piece
 
     public override List<Move> GetPosibleMoves()
     {
-        List<Move> test = new List<Move>();
-    
-        return test;
+        return null;
     }
 }

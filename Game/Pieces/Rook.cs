@@ -17,25 +17,23 @@ public class Rook : Piece
 
     public override List<Move> GetPosibleMoves()
     {
-        List<Move> test = new List<Move>();
-
+        List<Move> moves = new List<Move>();
         bool right, left, top, down;
         right = left = top = down = false;
 
         for(int i = 1; i < 7; i++)
         {
             if (!right)
-                top = CheckMove(moves, pos.x + i, pos.y);
+                right = CheckMove(moves, pos.x + i, pos.y);
             if (!left)
-                top = CheckMove(moves, pos.x - i, pos.y);
+                left = CheckMove(moves, pos.x - i, pos.y);
             if (!top)
                 top = CheckMove(moves, pos.x, pos.y - i);
             if (!down)
-                top = CheckMove(moves, pos.x, pos.y + i);
-            if (!top && !right && !left && !down)
+                down = CheckMove(moves, pos.x, pos.y + i);
+            if (top && right && left && down)
                 break;
         }
-    
-        return test;
+        return moves;
     }
 }

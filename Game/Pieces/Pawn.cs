@@ -22,16 +22,14 @@ public class Pawn : Piece
         int dir = colour == Colour.Black ? 1 : -1;
         int start = colour == Colour.Black ? 1 : 6;
 
-        if (board.pieces[pos.x, pos.y+dir] == null)
-        {
-            moves.Add(new Move(pos.x, pos.y+dir));
-            GD.Print(moves.Count);
-            if (pos.y == start && board.pieces[pos.x, pos.y + dir*2] == null)
-                moves.Add(new Move(pos.x, pos.y+dir*2));
-        }
-        CheckMove(moves, pos.x+1, pos.y+dir);
-        CheckMove(moves, pos.x-1, pos.y+dir);
-    
+        bool blocked = CheckMove(moves, pos.x, pos.y+dir, false);
+        if (pos.y == start && !blocked)
+            CheckMove(moves, pos.x, pos.y+dir*2, false);
+
+        //check if piece is there
+        CheckMove(moves, pos.x+1, pos.y+dir, true, true);
+        CheckMove(moves, pos.x-1, pos.y+dir, true, true);
+        
         return moves;
     }
 }

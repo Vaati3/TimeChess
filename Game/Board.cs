@@ -21,6 +21,8 @@ public class Board : Node2D
     public float tileSize { get; private set;}
     public Piece[,] pieces { get; private set;}
 
+    private Control boardControl;
+
     private void InstanciatePiece(PackedScene scene, string type, Colour colour, int x, int y)
     {
         Piece inst = scene.Instance<Piece>();
@@ -52,25 +54,7 @@ public class Board : Node2D
             InstanciatePiece(scene, type, Colour.Black, x, 0);
             InstanciatePiece(scene, type, Colour.White, x, 7);
         }
-    }
-
-    private void ScaleBoard(float scale)
-    {
-        tileSize *= scale;
-        Vector2 scaleVector = new Vector2(scale, scale);
-        Control boardControl = GetNode<Control>("CanvasLayer/BoardControl");
-        boardControl.RectScale = scaleVector;
-
-        for (int y = 0; y < 8; y++)
-        {
-            for (int x = 0; x < 8; x++)
-            {
-                if (pieces[x,y] != null)
-                {
-                    pieces[x,y].UpdateScale(scaleVector);
-                }
-            }
-        }
+        InstanciatePiece(scene, "Rook",  Colour.Black, 4, 4);
     }
 
     public override void _Ready()
@@ -78,6 +62,6 @@ public class Board : Node2D
         tileSize = 50;
         pieces = new Piece[8,8];
         ResetPieces();
-        ScaleBoard(1.5f);
+        Scale = new Vector2(1.5f, 1.5f);
     }
 }

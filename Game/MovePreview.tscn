@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Game/MovePreview.cs" type="Script" id=1]
+
+[node name="MovePreview" type="Node2D"]
+script = ExtResource( 1 )
+red = Color( 1, 0, 0, 0.686275 )
+green = Color( 0, 1, 0, 0.686275 )
+
+[node name="Control" type="Control" parent="."]
+margin_right = 50.0
+margin_bottom = 50.0
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.152941, 0.435294, 0.0627451, 0.686275 )
+
+[node name="Button" type="Button" parent="Control"]
+self_modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
