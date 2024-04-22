@@ -17,6 +17,31 @@ public class Queen : Piece
 
     public override List<Move> GetPosibleMoves()
     {
-        return null;
+        List<Move> moves = new List<Move>();
+        bool right, left, top, down, topR, TopL, downR, downL;
+        right = left = top = down = topR = TopL = downR = downL = false;
+
+        for(int i = 1; i < 7; i++)
+        {
+            if (!right)
+                right = CheckMove(moves, pos.x + i, pos.y);
+            if (!left)
+                left = CheckMove(moves, pos.x - i, pos.y);
+            if (!top)
+                top = CheckMove(moves, pos.x, pos.y - i);
+            if (!down)
+                down = CheckMove(moves, pos.x, pos.y + i);
+            if (!topR)
+                topR = CheckMove(moves, pos.x + i, pos.y + i);
+            if (!TopL)
+                TopL = CheckMove(moves, pos.x - i, pos.y + i);
+            if (!downR)
+                downR = CheckMove(moves, pos.x + i, pos.y - i);
+            if (!downL)
+                downL = CheckMove(moves, pos.x - i, pos.y - i);
+            if (top && right && left && down && topR && TopL && downR && downL)
+                break;
+        }
+        return moves;
     }
 }

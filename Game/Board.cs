@@ -21,7 +21,10 @@ public class Board : Node2D
     public float tileSize { get; private set;}
     public Piece[,] pieces { get; private set;}
 
-    private Control boardControl;
+    public int turn { get; private set;}
+    public Colour player { get; private set;}
+    public int blackFuel { get; private set;}
+    public int whiteFuel { get; private set;}
 
     private void InstanciatePiece(PackedScene scene, string type, Colour colour, int x, int y)
     {
@@ -54,12 +57,14 @@ public class Board : Node2D
             InstanciatePiece(scene, type, Colour.Black, x, 0);
             InstanciatePiece(scene, type, Colour.White, x, 7);
         }
-        InstanciatePiece(scene, "Rook",  Colour.Black, 4, 4);
+        InstanciatePiece(scene, "King",  Colour.Black, 4, 4);
     }
 
     public override void _Ready()
     {
         tileSize = 50;
+        player = Colour.White;
+        turn = 1;
         pieces = new Piece[8,8];
         ResetPieces();
         Scale = new Vector2(1.5f, 1.5f);

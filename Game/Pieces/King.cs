@@ -15,8 +15,25 @@ public class King : Piece
         }
     }
 
+    public bool IsCheck(int x, int y)
+    {
+        return false;
+    }
+
+//add check/checkmate and prevent selfcheck
     public override List<Move> GetPosibleMoves()
     {
-        return null;
+        List<Move> moves = new List<Move>();
+
+        CheckMove(moves, pos.x + 1, pos.y);
+        CheckMove(moves, pos.x - 1, pos.y);
+        CheckMove(moves, pos.x, pos.y - 1);
+        CheckMove(moves, pos.x, pos.y + 1);
+        CheckMove(moves, pos.x + 1, pos.y + 1);
+        CheckMove(moves, pos.x - 1, pos.y + 1);
+        CheckMove(moves, pos.x + 1, pos.y - 1);
+        CheckMove(moves, pos.x - 1, pos.y - 1);
+        
+        return moves;
     }
 }

@@ -17,6 +17,17 @@ public class Knight : Piece
 
     public override List<Move> GetPosibleMoves()
     {
-        return null;
+        List<Move> moves = new List<Move>();
+        
+        CheckMove(moves, pos.x - 2, pos.y - 1);
+        CheckMove(moves, pos.x - 1, pos.y - 2);
+        CheckMove(moves, pos.x + 2, pos.y - 1);
+        CheckMove(moves, pos.x + 1, pos.y - 2);
+        CheckMove(moves, pos.x - 2, pos.y + 1);
+        CheckMove(moves, pos.x - 1, pos.y + 2);
+        CheckMove(moves, pos.x + 2, pos.y + 1);
+        CheckMove(moves, pos.x + 1, pos.y + 2);
+        
+        return moves;
     }
 }

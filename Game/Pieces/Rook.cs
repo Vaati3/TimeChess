@@ -15,6 +15,7 @@ public class Rook : Piece
         }
     }
 
+//missing castling with king
     public override List<Move> GetPosibleMoves()
     {
         List<Move> moves = new List<Move>();

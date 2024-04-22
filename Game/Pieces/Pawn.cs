@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 public class Pawn : Piece
 {
@@ -16,6 +15,7 @@ public class Pawn : Piece
         }
     }
 
+//missing promotion and prise en passant
     public override List<Move> GetPosibleMoves()
     {
         List<Move> moves = new List<Move>();
