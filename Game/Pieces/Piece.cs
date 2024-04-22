@@ -12,10 +12,12 @@ public enum Colour
 public struct Move{
     public Vector2i pos;
     public Piece piece;
+    public int turn;
     public Move(int x, int y, Piece piece = null)
     {
         pos.x = x;
         pos.y = y;
+        turn = -1;
         this.piece = piece;
     }
 }
@@ -26,6 +28,8 @@ public abstract class Piece : Node2D
     protected Vector2i pos { get; private set;}
     protected Board board { get; private set;}
     protected List<Move> previousMoves { get; private set;}
+
+    protected bool isPreviewing { get; private set;}
     protected List<MovePreview> previews { get; private set;}
 
     public virtual void Init(Board board, Colour colour, int x, int y)
@@ -35,6 +39,7 @@ public abstract class Piece : Node2D
         pos = new Vector2i(x, y);
         Position = pos * board.tileSize;
 
+        isPreviewing = false;
         previousMoves = new List<Move>();
     }
 
@@ -90,6 +95,7 @@ public abstract class Piece : Node2D
             previews = new List<MovePreview>();
             CreatePreviews();
         }
+        isPreviewing = !isPreviewing;
         foreach(MovePreview preview in previews)
         {
             preview.Visible = !preview.Visible;
@@ -98,6 +104,7 @@ public abstract class Piece : Node2D
 
     public void PerformMove(Move move)
     {
+        isPreviewing = false;
         board.pieces[pos.x, pos.y] = null;
         pos = move.pos;
         Position = pos * board.tileSize;
@@ -106,18 +113,40 @@ public abstract class Piece : Node2D
         {
             move.piece.QueueFree();
         }
+        move.turn = board.turn;
+        board.NextTurn(move);
         previousMoves.Add(move);
         CreatePreviews();
     }
 
     public void _on_Button_pressed()
     {
-        TogglePreviews();
-        GD.Print(Position.x.ToString() + " " + Position.y.ToString());
-        // foreach(MovePreview preview in previews)
-        // {
-        //     //GD.Print(preview.Position.x.ToString() + " " + preview.Position.y.ToString());
-        //     preview.ZIndex = 100;
-        // }
+        if ((colour == Colour.Black && board.turn % 2 != 0) || (colour == Colour.White && board.turn % 2 == 0))
+            return;
+        if (!isPreviewing)
+            TogglePreviews();
+        //GD.Print(Position.x.ToString() + " " + Position.y.ToString());
+    }
+
+    public override void _Input(InputEvent @event)
+    {
+        if (isPreviewing)
+        {
+            if (@event is InputEventMouseButton mouse)
+            {
+                bool unfocus = true;
+
+                foreach (MovePreview preview in previews)
+                {
+                    if (preview.CheckMouse(mouse.Position))
+                    {
+                        unfocus = false;
+                        break;
+                    }
+                }
+                if (unfocus)
+                    TogglePreviews();
+            }
+        }
     }
 }

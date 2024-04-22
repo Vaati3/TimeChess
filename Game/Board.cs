@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public struct Vector2i
 {
@@ -20,9 +21,8 @@ public class Board : Node2D
 {
     public float tileSize { get; private set;}
     public Piece[,] pieces { get; private set;}
-
+    public List<Move> allMoves { get; private set;}
     public int turn { get; private set;}
-    public Colour player { get; private set;}
     public int blackFuel { get; private set;}
     public int whiteFuel { get; private set;}
 
@@ -59,14 +59,19 @@ public class Board : Node2D
         }
         InstanciatePiece(scene, "King",  Colour.Black, 4, 4);
     }
+    public void NextTurn(Move lastMove)
+    {
+        turn++;
+        allMoves.Add(lastMove);
+    }
 
     public override void _Ready()
     {
         tileSize = 50;
-        player = Colour.White;
         turn = 1;
         pieces = new Piece[8,8];
         ResetPieces();
         Scale = new Vector2(1.5f, 1.5f);
+        allMoves = new List<Move>();
     }
 }
