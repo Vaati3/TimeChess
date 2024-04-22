@@ -20,3 +20,5 @@ color = Color( 0.152941, 0.435294, 0.0627451, 0.686275 )
 self_modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
+
+[connection signal="pressed" from="Control/Button" to="." method="_on_Button_pressed"]

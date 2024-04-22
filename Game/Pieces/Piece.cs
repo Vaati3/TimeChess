@@ -10,7 +10,7 @@ public enum Colour
 }
 
 public struct Move{
-    public Vector2 pos;
+    public Vector2i pos;
     public Piece piece;
     public Move(int x, int y, Piece piece = null)
     {
@@ -26,7 +26,6 @@ public abstract class Piece : Node2D
     protected Vector2i pos { get; private set;}
     protected Board board { get; private set;}
     protected List<Move> previousMoves { get; private set;}
-
     protected List<MovePreview> previews { get; private set;}
 
     public virtual void Init(Board board, Colour colour, int x, int y)
@@ -37,7 +36,6 @@ public abstract class Piece : Node2D
         Position = pos * board.tileSize;
 
         previousMoves = new List<Move>();
-        previews = new List<MovePreview>();
     }
 
     public void UpdateScale(Vector2 newScale) 
@@ -85,9 +83,36 @@ public abstract class Piece : Node2D
         }
     }
 
+    protected void TogglePreviews()
+    {
+        if (previews == null)
+        {
+            previews = new List<MovePreview>();
+            CreatePreviews();
+        }
+        foreach(MovePreview preview in previews)
+        {
+            preview.Visible = !preview.Visible;
+        }       
+    }
+
+    public void PerformMove(Move move)
+    {
+        board.pieces[pos.x, pos.y] = null;
+        pos = move.pos;
+        Position = pos * board.tileSize;
+        board.pieces[pos.x, pos.y] = this;
+        if (move.piece != null)
+        {
+            move.piece.QueueFree();
+        }
+        previousMoves.Add(move);
+        CreatePreviews();
+    }
+
     public void _on_Button_pressed()
     {
-        CreatePreviews();
+        TogglePreviews();
         GD.Print(Position.x.ToString() + " " + Position.y.ToString());
         // foreach(MovePreview preview in previews)
         // {
