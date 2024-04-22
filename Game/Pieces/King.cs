@@ -4,9 +4,12 @@ using System.Collections.Generic;
 
 public class King : Piece
 {
+
+    public bool isCheck {get; set;}
     public override void Init(Board board, Colour colour, int x, int y)
     {
         base.Init(board, colour, x, y);
+        isCheck = false;
         if (colour == Colour.Black)
         {
             GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://Game/Pieces/Sprites/BlackKing.png");
@@ -15,10 +18,23 @@ public class King : Piece
         }
     }
 
-    public bool IsCheck(int x, int y)
-    {
-        return false;
-    }
+    // public bool IsCheck(int x, int y)
+    // {
+    //     foreach (Piece piece in board.pieces)
+    //     {
+    //         if (piece.colour != colour)
+    //         {
+    //             foreach (Move move in piece.GetPosibleMoves())
+    //             {
+    //                 if (move.piece != null && move.piece == this)
+    //                 {
+    //                     return true;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return false;
+    // }
 
 //add check/checkmate and prevent selfcheck
     public override List<Move> GetPosibleMoves()

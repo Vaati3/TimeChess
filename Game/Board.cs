@@ -58,6 +58,7 @@ public class Board : Node2D
             InstanciatePiece(scene, type, Colour.White, x, 7);
         }
         InstanciatePiece(scene, "King",  Colour.Black, 4, 4);
+        InstanciatePiece(scene, "Queen",  Colour.White, 3, 3);
     }
     public void NextTurn(Move lastMove)
     {
@@ -70,8 +71,8 @@ public class Board : Node2D
         tileSize = 50;
         turn = 1;
         pieces = new Piece[8,8];
-        ResetPieces();
         Scale = new Vector2(1.5f, 1.5f);
+        ResetPieces();
         allMoves = new List<Move>();
     }
 }

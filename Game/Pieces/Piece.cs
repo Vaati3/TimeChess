@@ -24,7 +24,7 @@ public struct Move{
 
 public abstract class Piece : Node2D
 {
-    protected Colour colour { get; private set;}
+    public Colour colour { get; private set;}
     protected Vector2i pos { get; private set;}
     protected Board board { get; private set;}
     protected List<Move> previousMoves { get; private set;}
@@ -62,7 +62,14 @@ public abstract class Piece : Node2D
             return false;
         }
         if (canCapture && board.pieces[x, y].colour != colour)
+        {
             moves.Add(new Move(x, y, board.pieces[x, y]));
+            if (board.pieces[x, y].GetType() == typeof(King))
+            {
+                ((King)board.pieces[x, y]).isCheck = true;
+                GD.Print("check");
+            }
+        }
         return true;
     }
 
@@ -135,10 +142,9 @@ public abstract class Piece : Node2D
             if (@event is InputEventMouseButton mouse)
             {
                 bool unfocus = true;
-
                 foreach (MovePreview preview in previews)
                 {
-                    if (preview.CheckMouse(mouse.Position))
+                    if (preview.CheckMouse(mouse.Position, board.Scale.x))
                     {
                         unfocus = false;
                         break;
