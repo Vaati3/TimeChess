@@ -24,10 +24,10 @@ public class MovePreview : Node2D
             GetNode<ColorRect>("Control/ColorRect").Color = red;
     }
 
-    public bool CheckMouse(Vector2 mousePos, float scale)
+    public bool CheckMouse(Vector2 mousePos, Vector2 scale)
     {
-        if (mousePos.x >= GlobalPosition.x && mousePos.x <= GlobalPosition.x + tileSize * scale && 
-            mousePos.y >= GlobalPosition.y && mousePos.y <= GlobalPosition.y + tileSize * scale)
+        if (mousePos.x >= GlobalPosition.x && mousePos.x <= GlobalPosition.x + tileSize * scale.x && 
+            mousePos.y >= GlobalPosition.y && mousePos.y <= GlobalPosition.y + tileSize * scale.y)
             return true;
         return false;
     }

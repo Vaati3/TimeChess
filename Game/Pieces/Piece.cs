@@ -13,12 +13,16 @@ public struct Move{
     public Vector2i pos;
     public Piece piece;
     public int turn;
-    public Move(int x, int y, Piece piece = null)
+    public bool canCapture;
+    public bool noPreview;
+    public Move(int x, int y, bool canCapture = true, bool noPreview = false, Piece piece = null)
     {
         pos.x = x;
         pos.y = y;
+        this.canCapture = canCapture;
         turn = -1;
         this.piece = piece;
+        this.noPreview = noPreview;
     }
 }
 
@@ -30,6 +34,8 @@ public abstract class Piece : Node2D
     protected List<Move> previousMoves { get; private set;}
 
     protected bool isPreviewing { get; private set;}
+    public bool needsUpdate { get; set;}
+
     protected List<MovePreview> previews { get; private set;}
 
     public virtual void Init(Board board, Colour colour, int x, int y)
@@ -40,13 +46,8 @@ public abstract class Piece : Node2D
         Position = pos * board.tileSize;
 
         isPreviewing = false;
+        needsUpdate = true;
         previousMoves = new List<Move>();
-    }
-
-    public void UpdateScale(Vector2 newScale) 
-    {
-        Scale = newScale;
-        Position = pos * board.tileSize;
     }
 
     public abstract List<Move> GetPosibleMoves();
@@ -58,19 +59,40 @@ public abstract class Piece : Node2D
         if (board.pieces[x, y] == null)
         {
             if (!onlyCapture)
-                moves.Add(new Move(x, y));
+                moves.Add(new Move(x, y, canCapture));
+            else if(canCapture)
+                moves.Add(new Move(x, y, canCapture, true));
             return false;
         }
         if (canCapture && board.pieces[x, y].colour != colour)
         {
-            moves.Add(new Move(x, y, board.pieces[x, y]));
+            moves.Add(new Move(x, y, true, false, board.pieces[x, y]));
             if (board.pieces[x, y].GetType() == typeof(King))
             {
                 ((King)board.pieces[x, y]).isCheck = true;
                 GD.Print("check");
             }
         }
+        if (board.pieces[x, y].colour == colour)
+            moves.Add(new Move(x, y, canCapture, true));
         return true;
+    }
+
+    public void PerformMove(Move move)
+    {
+        board.pieces[pos.x, pos.y] = null;
+        pos = move.pos;
+        Position = pos * board.tileSize;
+        board.pieces[pos.x, pos.y] = this;
+        if (move.piece != null)
+        {
+            move.piece.QueueFree();
+        }
+        move.turn = board.turn;
+        board.NextTurn(move);
+        previousMoves.Add(move);
+        TogglePreviews();
+        board.UpdatePieces();
     }
 
     protected void CreatePreviews()
@@ -84,10 +106,12 @@ public abstract class Piece : Node2D
         List<Move> moves = GetPosibleMoves();
         PackedScene scene = GD.Load<PackedScene>("res://Game/MovePreview.tscn");
 
-        if (moves.Count() == 0)
+        if (moves == null || moves.Count() == 0)
             return;
         foreach (Move move in moves)
         {
+            if (move.noPreview)
+                continue;
             MovePreview preview = scene.Instance<MovePreview>();
             preview.Init(move, this, board.tileSize);
             AddChild(preview);
@@ -97,10 +121,11 @@ public abstract class Piece : Node2D
 
     protected void TogglePreviews()
     {
-        if (previews == null)
+        if (needsUpdate)
         {
             previews = new List<MovePreview>();
             CreatePreviews();
+            needsUpdate = false;
         }
         isPreviewing = !isPreviewing;
         foreach(MovePreview preview in previews)
@@ -109,26 +134,14 @@ public abstract class Piece : Node2D
         }       
     }
 
-    public void PerformMove(Move move)
+    protected bool IsTurn()
     {
-        isPreviewing = false;
-        board.pieces[pos.x, pos.y] = null;
-        pos = move.pos;
-        Position = pos * board.tileSize;
-        board.pieces[pos.x, pos.y] = this;
-        if (move.piece != null)
-        {
-            move.piece.QueueFree();
-        }
-        move.turn = board.turn;
-        board.NextTurn(move);
-        previousMoves.Add(move);
-        CreatePreviews();
+        return (colour == Colour.Black && board.turn % 2 == 0) || (colour == Colour.White && board.turn % 2 != 0);
     }
 
     public void _on_Button_pressed()
     {
-        if ((colour == Colour.Black && board.turn % 2 != 0) || (colour == Colour.White && board.turn % 2 == 0))
+        if (!IsTurn())
             return;
         if (!isPreviewing)
             TogglePreviews();
@@ -141,17 +154,19 @@ public abstract class Piece : Node2D
         {
             if (@event is InputEventMouseButton mouse)
             {
-                bool unfocus = true;
+                if (mouse.Pressed)
+                    return;
+                bool clickOut = true;
                 foreach (MovePreview preview in previews)
                 {
-                    if (preview.CheckMouse(mouse.Position, board.Scale.x))
+                    if (preview.CheckMouse(mouse.Position, board.Scale))
                     {
-                        unfocus = false;
+                        clickOut = false;
                         break;
                     }
                 }
-                if (unfocus)
-                    TogglePreviews();
+                if (clickOut)
+                    TogglePreviews();   
             }
         }
     }

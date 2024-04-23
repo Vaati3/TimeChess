@@ -18,37 +18,44 @@ public class King : Piece
         }
     }
 
-    // public bool IsCheck(int x, int y)
-    // {
-    //     foreach (Piece piece in board.pieces)
-    //     {
-    //         if (piece.colour != colour)
-    //         {
-    //             foreach (Move move in piece.GetPosibleMoves())
-    //             {
-    //                 if (move.piece != null && move.piece == this)
-    //                 {
-    //                     return true;
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     return false;
-    // }
-
-//add check/checkmate and prevent selfcheck
+    protected bool CheckMove(List<Move> moves, int x, int y, List<Move> danger)
+    {
+        Vector2i newPos = new Vector2i(x, y);
+        foreach (Move move in danger)
+        {
+            //GD.Print(newPos.x.ToString() + " " + newPos.y.ToString() + "  " + move.pos.x.ToString() + " " + move.pos.y.ToString());
+            if(move.canCapture && move.pos == newPos)
+                return false;
+        }
+        return CheckMove(moves, x, y);
+    }
+//add checkmate and prevent selfcheck
     public override List<Move> GetPosibleMoves()
     {
         List<Move> moves = new List<Move>();
 
-        CheckMove(moves, pos.x + 1, pos.y);
-        CheckMove(moves, pos.x - 1, pos.y);
-        CheckMove(moves, pos.x, pos.y - 1);
-        CheckMove(moves, pos.x, pos.y + 1);
-        CheckMove(moves, pos.x + 1, pos.y + 1);
-        CheckMove(moves, pos.x - 1, pos.y + 1);
-        CheckMove(moves, pos.x + 1, pos.y - 1);
-        CheckMove(moves, pos.x - 1, pos.y - 1);
+        if (IsTurn())
+        {
+            List<Move> danger = board.GetAllPiecesMoves(colour);
+
+            CheckMove(moves, pos.x + 1, pos.y, danger);
+            CheckMove(moves, pos.x - 1, pos.y, danger);
+            CheckMove(moves, pos.x, pos.y - 1, danger);
+            CheckMove(moves, pos.x, pos.y + 1, danger);
+            CheckMove(moves, pos.x + 1, pos.y + 1, danger);
+            CheckMove(moves, pos.x - 1, pos.y + 1, danger);
+            CheckMove(moves, pos.x + 1, pos.y - 1, danger);
+            CheckMove(moves, pos.x - 1, pos.y - 1, danger);
+        } else {
+            CheckMove(moves, pos.x + 1, pos.y);
+            CheckMove(moves, pos.x - 1, pos.y);
+            CheckMove(moves, pos.x, pos.y - 1);
+            CheckMove(moves, pos.x, pos.y + 1);
+            CheckMove(moves, pos.x + 1, pos.y + 1);
+            CheckMove(moves, pos.x - 1, pos.y + 1);
+            CheckMove(moves, pos.x + 1, pos.y - 1);
+            CheckMove(moves, pos.x - 1, pos.y - 1);
+        }
         
         return moves;
     }

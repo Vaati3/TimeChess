@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public struct Vector2i
 {
@@ -14,6 +15,14 @@ public struct Vector2i
     static public Vector2 operator *(Vector2i pos, float n)
     {
         return new Vector2((float)pos.x * n, (float)pos.y * n);
+    }
+    static public bool operator ==(Vector2i posA, Vector2i posB)
+    {
+        return posA.x == posB.x && posA.y == posB.y;
+    }
+    static public bool operator !=(Vector2i posA, Vector2i posB)
+    {
+        return posA.x != posB.x || posA.y != posB.y;
     }
 }
 
@@ -64,6 +73,35 @@ public class Board : Node2D
     {
         turn++;
         allMoves.Add(lastMove);
+    }
+
+    public void UpdatePieces()
+    {
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                if (pieces[x, y] != null)
+                    pieces[x, y].needsUpdate = true;
+            }
+        }
+    }
+
+    public List<Move> GetAllPiecesMoves(Colour colour)
+    {
+        List<Move> moves = new List<Move>();
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                if (pieces[x, y] != null && pieces[x, y].colour != colour)
+                {
+                    moves.AddRange(pieces[x, y].GetPosibleMoves());
+                }
+            }
+        }
+
+        return moves;
     }
 
     public override void _Ready()
