@@ -3,22 +3,18 @@
 [ext_resource path="res://Game/MovePreview.cs" type="Script" id=1]
 
 [node name="MovePreview" type="Node2D"]
+z_index = 1000
+z_as_relative = false
 script = ExtResource( 1 )
-red = Color( 1, 0, 0, 0.686275 )
-green = Color( 0, 1, 0, 0.686275 )
+red = Color( 0.509804, 0.0509804, 0.0509804, 0.686275 )
+green = Color( 0.152941, 0.435294, 0.0627451, 0.686275 )
 
 [node name="Control" type="Control" parent="."]
 margin_right = 50.0
 margin_bottom = 50.0
+rect_min_size = Vector2( 50, 50 )
 
 [node name="ColorRect" type="ColorRect" parent="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0.152941, 0.435294, 0.0627451, 0.686275 )
-
-[node name="Button" type="Button" parent="Control"]
-self_modulate = Color( 1, 1, 1, 0 )
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[connection signal="pressed" from="Control/Button" to="." method="_on_Button_pressed"]

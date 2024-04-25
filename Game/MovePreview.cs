@@ -28,12 +28,10 @@ public class MovePreview : Node2D
     {
         if (mousePos.x >= GlobalPosition.x && mousePos.x <= GlobalPosition.x + tileSize * scale.x && 
             mousePos.y >= GlobalPosition.y && mousePos.y <= GlobalPosition.y + tileSize * scale.y)
-            return true;
+            {
+                owner.PerformMove(move);
+                return true;
+            }
         return false;
-    }
-
-    public void _on_Button_pressed()
-    {
-        owner.PerformMove(move);
     }
 }

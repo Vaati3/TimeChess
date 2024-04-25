@@ -94,10 +94,7 @@ public abstract class Piece : Node2D
         pos = move.pos;
         Position = pos * board.tileSize;
         board.pieces[pos.x, pos.y] = this;
-        if (move.target != null)
-        {
-            move.target.QueueFree();
-        }
+        move.target?.QueueFree();
         move.turn = board.turn;
         previousMoves.Add(move);
         TogglePreviews();
@@ -151,7 +148,6 @@ public abstract class Piece : Node2D
     public List<Move> DefendKing()
     {
         List<Move> limitedMoves = new List<Move>();
-        GD.Print("defend");
 
         foreach (Move move in GetPosibleMoves())
         {
@@ -204,7 +200,10 @@ public abstract class Piece : Node2D
                     }
                 }
                 if (clickOut)
+                {
+                    GD.Print("£");
                     TogglePreviews();   
+                }
             }
         }
     }
