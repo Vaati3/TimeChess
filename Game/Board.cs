@@ -30,6 +30,7 @@ public class Board : Node2D
 {
     public float tileSize { get; private set;}
     public Piece[,] pieces { get; private set;}
+    public King[] kings { get; private set;}
     public List<Move> allMoves { get; private set;}
     public int turn { get; private set;}
     public int blackFuel { get; private set;}
@@ -43,6 +44,9 @@ public class Board : Node2D
         pieces[x,y] = (Piece)GD.InstanceFromId(id);
         pieces[x,y].Init(this, colour, x, y);
         AddChild(pieces[x,y]);
+        
+        if (type == "King")
+            kings[(int)colour] = (King)pieces[x,y];
     }
     private void ResetPieces()
     {
@@ -66,25 +70,47 @@ public class Board : Node2D
             InstanciatePiece(scene, type, Colour.Black, x, 0);
             InstanciatePiece(scene, type, Colour.White, x, 7);
         }
-        InstanciatePiece(scene, "King",  Colour.Black, 4, 4);
-        InstanciatePiece(scene, "Queen",  Colour.White, 3, 3);
     }
-    public void NextTurn(Move lastMove)
+
+    public void NextTurn(Move lastMove, Colour colour)
     {
         turn++;
         allMoves.Add(lastMove);
+
+        if (colour == Colour.Black)
+            UpdatePieces(Colour.White);
+        else
+            UpdatePieces(Colour.Black);
     }
 
-    public void UpdatePieces()
+    private void UpdatePieces(Colour colour)
     {
+        bool kingIsCheck = kings[(int)colour].IsCheck();
         for (int y = 0; y < 8; y++)
         {
             for (int x = 0; x < 8; x++)
             {
                 if (pieces[x, y] != null)
+                {
                     pieces[x, y].needsUpdate = true;
+                    if (pieces[x, y].king == null)
+                        pieces[x, y].king = kings[(int)colour];
+                    if (pieces[x, y].colour == colour && pieces[x, y].GetType() != typeof(King))
+                        pieces[x, y].kingIsCheck = kingIsCheck;
+                    else
+                        pieces[x, y].kingIsCheck = false;
+                }
             }
         }
+    }
+
+    public void Checkmate(Colour colour)
+    {
+        GD.Print("Checkmate");
+        if (colour == Colour.Black)
+            GD.Print("Whites Win");
+        else
+            GD.Print("Blacks Win");
     }
 
     public List<Move> GetAllPiecesMoves(Colour colour)
@@ -102,13 +128,14 @@ public class Board : Node2D
         }
 
         return moves;
-    }
+    } 
 
     public override void _Ready()
     {
         tileSize = 50;
         turn = 1;
         pieces = new Piece[8,8];
+        kings = new King[2];
         Scale = new Vector2(1.5f, 1.5f);
         ResetPieces();
         allMoves = new List<Move>();

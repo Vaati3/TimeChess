@@ -12,31 +12,47 @@ public enum Colour
 public struct Move{
     public Vector2i pos;
     public Piece piece;
+    public Piece target;
     public int turn;
     public bool canCapture;
     public bool noPreview;
-    public Move(int x, int y, bool canCapture = true, bool noPreview = false, Piece piece = null)
+    public bool timeTravel;
+    public Move(Piece piece, int x, int y, bool canCapture = true, bool noPreview = false, Piece target = null)
     {
+        this.piece = piece;
         pos.x = x;
         pos.y = y;
-        this.canCapture = canCapture;
         turn = -1;
-        this.piece = piece;
+        this.canCapture = canCapture;
+        this.target = target;
         this.noPreview = noPreview;
+        timeTravel = false;
+    }
+    public Move(Piece piece, Move move, Piece target = null)
+    {
+        this.piece = piece;
+        pos = move.pos;
+        turn = -1;
+        canCapture = move.canCapture;
+        this.target = target;
+        noPreview = true;
+        timeTravel = true;
     }
 }
 
 public abstract class Piece : Node2D
 {
     public Colour colour { get; private set;}
-    protected Vector2i pos { get; private set;}
+    public Vector2i pos { get; private set;}
     protected Board board { get; private set;}
     protected List<Move> previousMoves { get; private set;}
 
     protected bool isPreviewing { get; private set;}
     public bool needsUpdate { get; set;}
-
     protected List<MovePreview> previews { get; private set;}
+
+    public bool kingIsCheck { get; set;}
+    public King king { get; set;}
 
     public virtual void Init(Board board, Colour colour, int x, int y)
     {
@@ -47,6 +63,7 @@ public abstract class Piece : Node2D
 
         isPreviewing = false;
         needsUpdate = true;
+        kingIsCheck = false;
         previousMoves = new List<Move>();
     }
 
@@ -59,22 +76,15 @@ public abstract class Piece : Node2D
         if (board.pieces[x, y] == null)
         {
             if (!onlyCapture)
-                moves.Add(new Move(x, y, canCapture));
+                moves.Add(new Move(this, x, y, canCapture));
             else if(canCapture)
-                moves.Add(new Move(x, y, canCapture, true));
+                moves.Add(new Move(this, x, y, canCapture, true));
             return false;
         }
         if (canCapture && board.pieces[x, y].colour != colour)
-        {
-            moves.Add(new Move(x, y, true, false, board.pieces[x, y]));
-            if (board.pieces[x, y].GetType() == typeof(King))
-            {
-                ((King)board.pieces[x, y]).isCheck = true;
-                GD.Print("check");
-            }
-        }
+            moves.Add(new Move(this, x, y, true, false, board.pieces[x, y]));
         if (board.pieces[x, y].colour == colour)
-            moves.Add(new Move(x, y, canCapture, true));
+            moves.Add(new Move(this, x, y, canCapture, true));
         return true;
     }
 
@@ -84,15 +94,14 @@ public abstract class Piece : Node2D
         pos = move.pos;
         Position = pos * board.tileSize;
         board.pieces[pos.x, pos.y] = this;
-        if (move.piece != null)
+        if (move.target != null)
         {
-            move.piece.QueueFree();
+            move.target.QueueFree();
         }
         move.turn = board.turn;
-        board.NextTurn(move);
         previousMoves.Add(move);
         TogglePreviews();
-        board.UpdatePieces();
+        board.NextTurn(move, colour);
     }
 
     protected void CreatePreviews()
@@ -103,7 +112,7 @@ public abstract class Piece : Node2D
         }
         previews.Clear();
 
-        List<Move> moves = GetPosibleMoves();
+        List<Move> moves = kingIsCheck ? DefendKing() : GetPosibleMoves();
         PackedScene scene = GD.Load<PackedScene>("res://Game/MovePreview.tscn");
 
         if (moves == null || moves.Count() == 0)
@@ -137,6 +146,35 @@ public abstract class Piece : Node2D
     protected bool IsTurn()
     {
         return (colour == Colour.Black && board.turn % 2 == 0) || (colour == Colour.White && board.turn % 2 != 0);
+    }
+
+    public List<Move> DefendKing()
+    {
+        List<Move> limitedMoves = new List<Move>();
+        GD.Print("defend");
+
+        foreach (Move move in GetPosibleMoves())
+        {
+            board.pieces[move.pos.x, move.pos.y] = this;
+            bool stillCheck = false;
+            if (move.pos != king.attacker.pos)
+            {
+                foreach (Move attack in king.attacker.GetPosibleMoves())
+                {
+                    if (attack.pos == king.pos)
+                    {
+                        // GD.Print("stillcheck");
+                        // GD.Print(move.pos.x.ToString() + " " + move.pos.y.ToString());
+                        stillCheck = true;
+                        break;
+                    }
+                }
+            }
+            if (!stillCheck)
+                limitedMoves.Add(move);
+            board.pieces[move.pos.x, move.pos.y] = move.target;
+        }
+        return limitedMoves;
     }
 
     public void _on_Button_pressed()

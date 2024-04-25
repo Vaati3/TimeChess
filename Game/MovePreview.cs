@@ -18,7 +18,7 @@ public class MovePreview : Node2D
 
         Position = (move.pos * tileSize) - owner.Position;
         Visible = false;
-        if (move.piece == null)
+        if (move.target == null)
             GetNode<ColorRect>("Control/ColorRect").Color = green;
         else
             GetNode<ColorRect>("Control/ColorRect").Color = red;
