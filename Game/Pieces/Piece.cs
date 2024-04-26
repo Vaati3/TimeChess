@@ -50,7 +50,6 @@ public abstract class Piece : Node2D
     public bool needsUpdate { get; set;}
     protected List<MovePreview> previews { get; private set;}
     public bool kingIsCheck { get; set;}
-    public King king { get; set;}
 
     public virtual void Init(Board board, Colour colour, int x, int y)
     {
@@ -96,6 +95,7 @@ public abstract class Piece : Node2D
         move.turn = board.turn;
         previousMoves.Add(move);
         TogglePreviews();
+        board.kings[(int)colour].UnCheck();
         board.NextTurn(move, colour);
     }
 
@@ -106,7 +106,6 @@ public abstract class Piece : Node2D
             preview.QueueFree();
         }
         previews.Clear();
-
         List<Move> moves = kingIsCheck ? DefendKing() : GetPosibleMoves();
         PackedScene scene = GD.Load<PackedScene>("res://Game/MovePreview.tscn");
 
@@ -146,16 +145,22 @@ public abstract class Piece : Node2D
     public List<Move> DefendKing()
     {
         List<Move> limitedMoves = new List<Move>();
-
-        foreach (Move move in GetPosibleMoves())
+        List<Move> moves = GetPosibleMoves();
+        
+        if (moves == null || moves.Count == 0)
+            return limitedMoves;
+        board.pieces[pos.x, pos.y] = null;
+        foreach (Move move in moves)
         {
-            board.pieces[move.pos.x, move.pos.y] = this;
             bool stillCheck = false;
-            if (move.pos != king.attacker.pos)
+            if (move.noPreview)
+                continue;
+            board.pieces[move.pos.x, move.pos.y] = this;
+            if (move.target != board.kings[(int)colour].attacker)
             {
-                foreach (Move attack in king.attacker.GetPosibleMoves())
+                foreach (Move attack in board.kings[(int)colour].attacker.GetPosibleMoves())
                 {
-                    if (attack.pos == king.pos)
+                    if (attack.target != null && attack.target == board.kings[(int)colour])
                     {
                         stillCheck = true;
                         break;
@@ -166,6 +171,7 @@ public abstract class Piece : Node2D
                 limitedMoves.Add(move);
             board.pieces[move.pos.x, move.pos.y] = move.target;
         }
+        board.pieces[pos.x, pos.y] = this;
         return limitedMoves;
     }
 
@@ -173,9 +179,19 @@ public abstract class Piece : Node2D
     {
         if (!IsTurn())
             return;
+        if (!kingIsCheck)
+        {
+            board.pieces[pos.x, pos.y] = null;
+            bool isCheck = board.kings[(int)colour].IsCheck();
+            board.pieces[pos.x, pos.y] = this;
+            if (isCheck)
+            {
+                board.kings[(int)colour].UnCheck();
+                return;
+            }
+        }
         if (!isPreviewing)
             TogglePreviews();
-        //GD.Print(Position.x.ToString() + " " + Position.y.ToString());
     }
 
     public override void _Input(InputEvent @event)
