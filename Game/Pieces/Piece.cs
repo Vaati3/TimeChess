@@ -179,7 +179,7 @@ public abstract class Piece : Node2D
     {
         if (!IsTurn())
             return;
-        if (!kingIsCheck)
+        if (!kingIsCheck && GetType() != typeof(King))
         {
             board.pieces[pos.x, pos.y] = null;
             bool isCheck = board.kings[(int)colour].IsCheck();
