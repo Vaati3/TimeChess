@@ -113,6 +113,14 @@ public class Board : Node2D
             GD.Print("Blacks Win");
     }
 
+    public void PromotePawn(Piece pawn)
+    {
+        InstanciatePiece(GD.Load<PackedScene>("res://Game/Pieces/Piece.tscn"), "Queen", pawn.colour, pawn.pos.x, pawn.pos.y);
+        pieces[pawn.pos.x, pawn.pos.y].previousMoves = pawn.previousMoves;
+        pawn.QueueFree();
+        UpdatePieces(pieces[pawn.pos.x, pawn.pos.y].colour);
+    }
+
     public List<Move> GetAllPiecesMoves(Colour colour)
     {
         List<Move> moves = new List<Move>();

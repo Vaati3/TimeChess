@@ -15,6 +15,15 @@ public class Pawn : Piece
         }
     }
 
+    public override void PerformMove(Move move)
+    {
+        base.PerformMove(move);
+        if ((colour == Colour.Black && pos.y == 7) || (colour == Colour.White && pos.y == 0))
+        {
+            board.PromotePawn(this);
+        }
+    }
+
     private void EnPassant(List<Move> moves, int x, int y, int dir)
     {
         if (x < 0 || x > 7 || y < 0 || y > 7)

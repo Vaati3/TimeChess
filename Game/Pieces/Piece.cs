@@ -44,13 +44,11 @@ public abstract class Piece : Node2D
 {
     public Colour colour { get; private set;}
     public Vector2i pos { get; private set;}
+    public List<Move> previousMoves { get; set;}
     protected Board board { get; private set;}
-    public List<Move> previousMoves { get; private set;}
-
     protected bool isPreviewing { get; private set;}
     public bool needsUpdate { get; set;}
     protected List<MovePreview> previews { get; private set;}
-
     public bool kingIsCheck { get; set;}
     public King king { get; set;}
 
@@ -88,7 +86,7 @@ public abstract class Piece : Node2D
         return true;
     }
 
-    public void PerformMove(Move move)
+    public virtual void PerformMove(Move move)
     {
         board.pieces[pos.x, pos.y] = null;
         pos = move.pos;
