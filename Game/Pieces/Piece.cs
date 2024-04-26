@@ -45,7 +45,7 @@ public abstract class Piece : Node2D
     public Colour colour { get; private set;}
     public Vector2i pos { get; private set;}
     protected Board board { get; private set;}
-    protected List<Move> previousMoves { get; private set;}
+    public List<Move> previousMoves { get; private set;}
 
     protected bool isPreviewing { get; private set;}
     public bool needsUpdate { get; set;}
@@ -159,8 +159,6 @@ public abstract class Piece : Node2D
                 {
                     if (attack.pos == king.pos)
                     {
-                        // GD.Print("stillcheck");
-                        // GD.Print(move.pos.x.ToString() + " " + move.pos.y.ToString());
                         stillCheck = true;
                         break;
                     }
@@ -200,10 +198,7 @@ public abstract class Piece : Node2D
                     }
                 }
                 if (clickOut)
-                {
-                    GD.Print("£");
-                    TogglePreviews();   
-                }
+                    TogglePreviews();
             }
         }
     }

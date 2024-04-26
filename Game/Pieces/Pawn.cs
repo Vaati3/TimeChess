@@ -15,7 +15,20 @@ public class Pawn : Piece
         }
     }
 
-//missing promotion and prise en passant
+    private void EnPassant(List<Move> moves, int x, int y, int dir)
+    {
+        if (x < 0 || x > 7 || y < 0 || y > 7)
+            return;
+        if (board.pieces[x, y] == null)
+            return;
+        if(board.pieces[x, y].GetType() == typeof(Pawn) && 
+            board.pieces[x, y].previousMoves.Count == 1 &&
+            board.pieces[x, y].previousMoves[0].turn == board.turn-1)
+        {
+            moves.Add(new Move(this, x, y+dir, true, false, board.pieces[x, y]));
+        }
+    }
+
     public override List<Move> GetPosibleMoves()
     {
         List<Move> moves = new List<Move>();
@@ -26,10 +39,15 @@ public class Pawn : Piece
         if (pos.y == start && !blocked)
             CheckMove(moves, pos.x, pos.y+dir*2, false);
 
-        //check if piece is there
         CheckMove(moves, pos.x+1, pos.y+dir, true, true);
         CheckMove(moves, pos.x-1, pos.y+dir, true, true);
         
+        if ((colour == Colour.Black && pos.y == 4) || (colour == Colour.White && pos.y == 3))
+        {
+            EnPassant(moves, pos.x-1, pos.y, dir);
+            EnPassant(moves, pos.x+1, pos.y, dir);
+        }
+
         return moves;
     }
 }
