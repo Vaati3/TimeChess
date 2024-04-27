@@ -36,17 +36,12 @@ public class King : Piece
     
             foreach (Move move in danger)
             {
-                if(move.canCapture && move.pos == pos)
+                if(move.canCapture && move.target == this)
                 {
                     isCheck = true;
                     attacker = move.piece;
                     break;
                 }
-            }
-            if (isCheck)
-            {
-                if (GetPosibleMoves(danger).Count == 0)
-                    board.Checkmate(colour);
             }
 
         checkSignal.Visible = isCheck;

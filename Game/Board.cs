@@ -79,16 +79,28 @@ public class Board : Node2D
     {
         turn++;
         allMoves.Add(lastMove);
+        Colour nextTurnColour = colour == Colour.Black ? Colour.White : Colour.Black;
+        bool kingIsCheck = kings[(int)nextTurnColour].IsCheck();
+        UpdatePieces(nextTurnColour, kingIsCheck);
 
-        if (colour == Colour.Black)
-            UpdatePieces(Colour.White);
-        else
-            UpdatePieces(Colour.Black);
+        if (kingIsCheck)
+        {
+            bool isCheckmate = true;
+            foreach(Move move in GetAllPiecesMoves(colour, true))
+            {
+                if (!move.noPreview)
+                {
+                    isCheckmate = false;
+                    break;
+                }
+            }
+            if (isCheckmate)
+                Checkmate(colour);
+        }
     }
 
-    private void UpdatePieces(Colour colour)
+    private void UpdatePieces(Colour colour, bool kingIsCheck)
     {
-        bool kingIsCheck = kings[(int)colour].IsCheck();
         for (int y = 0; y < 8; y++)
         {
             for (int x = 0; x < 8; x++)
@@ -105,13 +117,9 @@ public class Board : Node2D
         }
     }
 
-    public void Checkmate(Colour colour)
+    private void Checkmate(Colour colour)
     {
-        GD.Print("Checkmate");
-        if (colour == Colour.Black)
-            GD.Print("Whites Win");
-        else
-            GD.Print("Blacks Win");
+        GD.Print("Checkmate " + colour + " win");
     }
 
     public void PromotePawn(Piece pawn)
@@ -119,10 +127,10 @@ public class Board : Node2D
         InstanciatePiece(GD.Load<PackedScene>("res://Game/Pieces/Piece.tscn"), "Queen", pawn.colour, pawn.pos.x, pawn.pos.y);
         pieces[pawn.pos.x, pawn.pos.y].previousMoves = pawn.previousMoves;
         pawn.QueueFree();
-        UpdatePieces(pieces[pawn.pos.x, pawn.pos.y].colour);
+        UpdatePieces(pieces[pawn.pos.x, pawn.pos.y].colour, false);//kings[(int)pawn.colour].IsCheck()
     }
 
-    public List<Move> GetAllPiecesMoves(Colour colour)
+    public List<Move> GetAllPiecesMoves(Colour colour, bool defendKing = false)
     {
         List<Move> moves = new List<Move>();
         for (int y = 0; y < 8; y++)
@@ -131,7 +139,10 @@ public class Board : Node2D
             {
                 if (pieces[x, y] != null && pieces[x, y].colour != colour)
                 {
-                    moves.AddRange(pieces[x, y].GetPosibleMoves());
+                    if (defendKing && pieces[x, y].GetType() != typeof(King))
+                        moves.AddRange(pieces[x, y].DefendKing());
+                    else
+                        moves.AddRange(pieces[x, y].GetPosibleMoves());
                 }
             }
         }
