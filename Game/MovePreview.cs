@@ -7,6 +7,8 @@ public class MovePreview : Node2D
     Color red;
     [Export]
     Color green;
+    [Export]
+    Color purple;
     Move move;
     Piece owner;
     float tileSize;
@@ -18,7 +20,10 @@ public class MovePreview : Node2D
 
         Position = (move.pos * tileSize) - owner.Position;
         Visible = false;
-        if (move.target == null)
+        if (move.timeTravelCost > 0){
+            GetNode<ColorRect>("Control/ColorRect").Color = purple;
+            GetNode<Label>("Control/Label").Text = move.timeTravelCost.ToString();
+        } else if (move.target == null)
             GetNode<ColorRect>("Control/ColorRect").Color = green;
         else
             GetNode<ColorRect>("Control/ColorRect").Color = red;

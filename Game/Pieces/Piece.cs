@@ -11,32 +11,35 @@ public enum Colour
 
 public struct Move{
     public Vector2i pos;
+    public Vector2i origin;
     public Piece piece;
     public Piece target;
+    public int timeTravelCost;
     public int turn;
     public bool canCapture;
     public bool noPreview;
-    public bool timeTravel;
     public Move(Piece piece, int x, int y, bool canCapture = true, bool noPreview = false, Piece target = null)
     {
         this.piece = piece;
+        origin = piece.pos;
         pos.x = x;
         pos.y = y;
         turn = -1;
+        timeTravelCost = 0;
         this.canCapture = canCapture;
         this.target = target;
         this.noPreview = noPreview;
-        timeTravel = false;
     }
-    public Move(Piece piece, Move move, Piece target = null)
+    public Move(Piece piece, Move move, int timeTravelCost, Piece target = null)
     {
         this.piece = piece;
-        pos = move.pos;
+        origin = piece.pos;
+        pos = move.origin;
         turn = -1;
+        this.timeTravelCost = timeTravelCost;
         canCapture = move.canCapture;
         this.target = target;
-        noPreview = true;
-        timeTravel = true;
+        noPreview = false;
     }
 }
 
@@ -66,6 +69,23 @@ public abstract class Piece : Node2D
 
     public abstract List<Move> GetPosibleMoves();
 
+    protected void TimeTravel(List<Move> moves)
+    {
+        if (previousMoves.Count() == 0)
+            return;
+        for (int i = previousMoves.Count()-1; i >= 0; i--)
+        {
+            Move move = previousMoves[i];
+            int cost = previousMoves.Count() - i;
+            if (cost > board.timeFuel[(int)colour])
+                return;
+            if (board.pieces[move.origin.x, move.origin.y] == null || board.pieces[move.origin.x, move.origin.y].colour != colour)
+            {
+                moves.Add(new Move(this, move, cost, board.pieces[move.origin.x, move.origin.y]));
+            }
+        }
+    }
+
     protected bool CheckMove(List<Move> moves, int x, int y, bool canCapture = true, bool onlyCapture = false)
     {
         if (x < 0 || x > 7 || y < 0 || y > 7)
@@ -90,10 +110,15 @@ public abstract class Piece : Node2D
         board.pieces[pos.x, pos.y] = null;
         pos = move.pos;
         Position = pos * board.tileSize;
+        if (move.target != null)
+        {
+            board.pieces[move.target.pos.x, move.target.pos.y] = null;
+            move.target.QueueFree();
+        }
         board.pieces[pos.x, pos.y] = this;
-        move.target?.QueueFree();
         move.turn = board.turn;
         previousMoves.Add(move);
+        board.timeFuel[(int)colour] -= move.timeTravelCost;
         TogglePreviews();
         board.kings[(int)colour].UnCheck();
         board.NextTurn(move, colour);

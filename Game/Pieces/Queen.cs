@@ -42,6 +42,7 @@ public class Queen : Piece
             if (top && right && left && down && topR && TopL && downR && downL)
                 break;
         }
+        TimeTravel(moves);
         return moves;
     }
 }

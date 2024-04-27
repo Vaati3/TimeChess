@@ -33,8 +33,7 @@ public class Board : Node2D
     public King[] kings { get; private set;}
     public List<Move> allMoves { get; private set;}
     public int turn { get; private set;}
-    public int blackFuel { get; private set;}
-    public int whiteFuel { get; private set;}
+    public int[] timeFuel { get; private set;}
 
     private void InstanciatePiece(PackedScene scene, string type, Colour colour, int x, int y)
     {
@@ -50,6 +49,10 @@ public class Board : Node2D
     }
     private void ResetPieces()
     {
+        turn = 1;
+        timeFuel[0] = 10;
+        timeFuel[1] = 10;
+        allMoves.Clear();
         PackedScene scene = GD.Load<PackedScene>("res://Game/Pieces/Piece.tscn");
         for (int x = 0; x < 8; x++)
         {
@@ -139,11 +142,11 @@ public class Board : Node2D
     public override void _Ready()
     {
         tileSize = 50;
-        turn = 1;
         pieces = new Piece[8,8];
         kings = new King[2];
+        timeFuel = new int[2];
         Scale = new Vector2(1.5f, 1.5f);
-        ResetPieces();
         allMoves = new List<Move>();
+        ResetPieces();
     }
 }

@@ -28,6 +28,7 @@ public class Knight : Piece
         CheckMove(moves, pos.x + 2, pos.y + 1);
         CheckMove(moves, pos.x + 1, pos.y + 2);
         
+        TimeTravel(moves);
         return moves;
     }
 }

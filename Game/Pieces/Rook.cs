@@ -35,6 +35,7 @@ public class Rook : Piece
             if (top && right && left && down)
                 break;
         }
+        TimeTravel(moves);
         return moves;
     }
 }

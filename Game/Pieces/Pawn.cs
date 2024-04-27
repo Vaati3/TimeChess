@@ -56,7 +56,7 @@ public class Pawn : Piece
             EnPassant(moves, pos.x-1, pos.y, dir);
             EnPassant(moves, pos.x+1, pos.y, dir);
         }
-
+        TimeTravel(moves);
         return moves;
     }
 }

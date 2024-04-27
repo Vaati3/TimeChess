@@ -8,6 +8,7 @@ z_as_relative = false
 script = ExtResource( 1 )
 red = Color( 0.509804, 0.0509804, 0.0509804, 0.686275 )
 green = Color( 0.152941, 0.435294, 0.0627451, 0.686275 )
+purple = Color( 0.216717, 0.010498, 0.335938, 0.686275 )
 
 [node name="Control" type="Control" parent="."]
 margin_right = 50.0
@@ -18,3 +19,14 @@ rect_min_size = Vector2( 50, 50 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0.152941, 0.435294, 0.0627451, 0.686275 )
+
+[node name="Label" type="Label" parent="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -13.0
+margin_top = -14.0
+margin_right = 1.0
+rect_scale = Vector2( 2, 2 )
+align = 1

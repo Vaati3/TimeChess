@@ -34,6 +34,8 @@ public class Bishop : Piece
             if (topR && TopL && downR && downL)
                 break;
         }
+
+        TimeTravel(moves);
         return moves;
     }
 }
