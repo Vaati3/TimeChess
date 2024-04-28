@@ -24,6 +24,14 @@ public struct Vector2i
     {
         return posA.x != posB.x || posA.y != posB.y;
     }
+    public override bool Equals(object obj)
+    {
+        return base.Equals(obj);
+    }
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
 }
 
 public class Board : Node2D
