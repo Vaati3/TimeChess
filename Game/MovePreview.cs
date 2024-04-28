@@ -9,6 +9,8 @@ public class MovePreview : Node2D
     Color green;
     [Export]
     Color purple;
+    [Export]
+    Color yellow;
     Move move;
     Piece owner;
     float tileSize;
@@ -20,7 +22,10 @@ public class MovePreview : Node2D
 
         Position = (move.pos * tileSize) - owner.Position;
         Visible = false;
-        if (move.timeTravelCost > 0){
+        if (move.isCastling)
+            GetNode<ColorRect>("Control/ColorRect").Color = yellow;
+        else if (move.timeTravelCost > 0)
+        {
             GetNode<ColorRect>("Control/ColorRect").Color = purple;
             GetNode<Label>("Control/Label").Text = move.timeTravelCost.ToString();
         } else if (move.target == null)
@@ -34,7 +39,10 @@ public class MovePreview : Node2D
         if (mousePos.x >= GlobalPosition.x && mousePos.x <= GlobalPosition.x + tileSize * scale.x && 
             mousePos.y >= GlobalPosition.y && mousePos.y <= GlobalPosition.y + tileSize * scale.y)
             {
-                owner.PerformMove(move);
+                if (move.isCastling)
+                    ((King)move.piece).PerformCastling(move);
+                else
+                    owner.PerformMove(move);
                 return true;
             }
         return false;

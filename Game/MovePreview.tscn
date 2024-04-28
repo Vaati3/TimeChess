@@ -9,6 +9,7 @@ script = ExtResource( 1 )
 red = Color( 0.509804, 0.0509804, 0.0509804, 0.686275 )
 green = Color( 0.152941, 0.435294, 0.0627451, 0.686275 )
 purple = Color( 0.216717, 0.010498, 0.335938, 0.686275 )
+yellow = Color( 0.988235, 0.768627, 0.0235294, 0.686275 )
 
 [node name="Control" type="Control" parent="."]
 margin_right = 50.0

@@ -85,7 +85,7 @@ public class Board : Node2D
                     type = "Knight"; break;
                 case 2: case 5:
                     type = "Bishop"; break;
-                case 4:
+                case 3:
                     type = "Queen"; break;
             }
             InstanciatePiece(scene, type, Colour.Black, x, 0);

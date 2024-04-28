@@ -48,13 +48,44 @@ public class King : Piece
         return isCheck;
     }
 
+    private void CheckCastling(List<Move> moves, List<Move> danger)
+    {
+        int y = colour == Colour.Black ? 0 : 7;
+        List<Move> buffer = new List<Move>();
+
+        if (board.pieces[0,y] != null && board.pieces[0,y].previousMoves.Count == 0)
+        {
+            if (!(CheckMove(buffer, 1, y, danger) || CheckMove(buffer, 2, y, danger) 
+                || CheckMove(buffer, 3, y, danger)))
+            {
+                moves.Add(new Move(this, 2, y, false, false, board.pieces[0,y], true));
+            }
+        }
+        if (board.pieces[7,y] != null && board.pieces[7,y].previousMoves.Count == 0)
+        {
+            if (!(CheckMove(buffer, 6, y, danger) || CheckMove(buffer, 5, y, danger)))
+            {
+                moves.Add(new Move(this, 6, y, false, false, board.pieces[7,y], true));
+            }
+        }
+    }
+
+    public void PerformCastling(Move move)
+    {
+        MovePiece(new Move(this, move.pos.x, move.pos.y, false));
+        int x = move.pos.x == 2 ? 3 : 5;
+        move.target.MovePiece(new Move(move.target, x, move.pos.y, false));
+        TogglePreviews();
+        board.NextTurn(move, colour);
+    }
+
     protected bool CheckMove(List<Move> moves, int x, int y, List<Move> danger)
     {
         Vector2i newPos = new Vector2i(x, y);
         foreach (Move move in danger)
         {
             if(move.canCapture && move.pos == newPos)
-                return false;
+                return true;
         }
         return CheckMove(moves, x, y);
     }
@@ -69,6 +100,8 @@ public class King : Piece
             List<Move> danger = board.GetAllPiecesMoves(colour);
             board.pieces[pos.x, pos.y] = this;
             moves = GetPosibleMoves(danger);
+            if (previousMoves.Count == 0 && !checkSignal.Visible)
+                CheckCastling(moves, danger);
         } else {
             moves = new List<Move>();
             CheckMove(moves, pos.x + 1, pos.y);

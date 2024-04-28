@@ -18,7 +18,8 @@ public struct Move{
     public int turn;
     public bool canCapture;
     public bool noPreview;
-    public Move(Piece piece, int x, int y, bool canCapture = true, bool noPreview = false, Piece target = null)
+    public bool isCastling;
+    public Move(Piece piece, int x, int y, bool canCapture = true, bool noPreview = false, Piece target = null, bool isCastling = false)
     {
         this.piece = piece;
         origin = piece.pos;
@@ -29,6 +30,7 @@ public struct Move{
         this.canCapture = canCapture;
         this.target = target;
         this.noPreview = noPreview;
+        this.isCastling = isCastling;
     }
     public Move(Piece piece, Move move, int timeTravelCost, Piece target = null)
     {
@@ -40,6 +42,7 @@ public struct Move{
         canCapture = move.canCapture;
         this.target = target;
         noPreview = false;
+        isCastling = false;
     }
 }
 
@@ -118,7 +121,7 @@ public abstract class Piece : Node2D
         return true;
     }
 
-    public virtual void PerformMove(Move move)
+    public void MovePiece(Move move)
     {
         board.pieces[pos.x, pos.y] = null;
         pos = move.pos;
@@ -132,6 +135,11 @@ public abstract class Piece : Node2D
         move.turn = board.turn;
         previousMoves.Add(move);
         board.timeFuel[(int)colour] -= move.timeTravelCost;
+    }
+
+    public virtual void PerformMove(Move move)
+    {
+        MovePiece(move);
         TogglePreviews();
         board.kings[(int)colour].UnCheck();
         board.NextTurn(move, colour);
