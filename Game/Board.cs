@@ -47,12 +47,30 @@ public class Board : Node2D
         if (type == "King")
             kings[(int)colour] = (King)pieces[x,y];
     }
-    private void ResetPieces()
+
+    private void ClearBoard()
     {
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                if (pieces[x,y] != null)
+                {
+                    pieces[x,y].QueueFree();
+                    pieces[x,y] = null;
+                }
+            }
+
+        }
         turn = 1;
         timeFuel[0] = 10;
         timeFuel[1] = 10;
         allMoves.Clear();
+    }
+
+    public void ResetPieces()
+    {
+        ClearBoard();
         PackedScene scene = GD.Load<PackedScene>("res://Game/Pieces/Piece.tscn");
         for (int x = 0; x < 8; x++)
         {
@@ -94,10 +112,15 @@ public class Board : Node2D
                     break;
                 }
             }
-            if (isCheckmate)
-                Checkmate(colour);
+            if (isCheckmate){
+                GD.Print("checkmate chief");
+                EmitSignal(nameof(Checkmate), colour);
+            }
         }
     }
+
+    [Signal]
+    public delegate void Checkmate(Colour colour);
 
     private void UpdatePieces(Colour colour, bool kingIsCheck)
     {
@@ -115,11 +138,6 @@ public class Board : Node2D
                 }
             }
         }
-    }
-
-    private void Checkmate(Colour colour)
-    {
-        GD.Print("Checkmate " + colour + " win");
     }
 
     public void PromotePawn(Piece pawn)
@@ -156,7 +174,6 @@ public class Board : Node2D
         pieces = new Piece[8,8];
         kings = new King[2];
         timeFuel = new int[2];
-        Scale = new Vector2(1.5f, 1.5f);
         allMoves = new List<Move>();
         ResetPieces();
     }

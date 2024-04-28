@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Game/Board.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Game/Game.cs" type="Script" id=2]
+[ext_resource path="res://UI/GameMenu.tscn" type="PackedScene" id=3]
+
+[node name="Game" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+
+[node name="Panel" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Board" parent="." instance=ExtResource( 1 )]
+position = Vector2( 311, 99 )
+
+[node name="GameMenu" parent="." instance=ExtResource( 3 )]
+visible = false
+
+[node name="MenuButton" type="Button" parent="."]
+margin_left = 939.0
+margin_top = 13.0
+margin_right = 1012.0
+margin_bottom = 66.0
+text = "Menu"
+
+[connection signal="Checkmate" from="Board" to="." method="_on_Board_Checkmate"]
+[connection signal="BackToMenu" from="GameMenu" to="." method="_on_GameMenu_BackToMenu"]
+[connection signal="pressed" from="MenuButton" to="." method="_on_MenuButton_pressed"]
