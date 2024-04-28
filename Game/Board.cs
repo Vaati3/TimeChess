@@ -35,6 +35,23 @@ public class Board : Node2D
     public int turn { get; private set;}
     public int[] timeFuel { get; private set;}
 
+    //debug
+    private void PrintBoard()
+    {
+        for (int y = 0; y < 8; y++)
+        {
+            String str = "";
+            for (int x = 0; x < 8; x++)
+            {
+                if (pieces[x,y] != null)
+                    str += pieces[x,y].GetType();
+                else
+                    str += "null";
+            }
+            GD.Print(str);
+        }
+    }
+
     private void InstanciatePiece(PackedScene scene, string type, Colour colour, int x, int y)
     {
         Piece inst = scene.Instance<Piece>();
@@ -112,10 +129,8 @@ public class Board : Node2D
                     break;
                 }
             }
-            if (isCheckmate){
-                GD.Print("checkmate chief");
+            if (isCheckmate)
                 EmitSignal(nameof(Checkmate), colour);
-            }
         }
     }
 

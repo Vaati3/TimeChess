@@ -126,11 +126,11 @@ public abstract class Piece : Node2D
         board.pieces[pos.x, pos.y] = null;
         pos = move.pos;
         Position = pos * board.tileSize;
-        if (move.target != null)
-        {
-            board.pieces[move.target.pos.x, move.target.pos.y] = null;
-            move.target.QueueFree();
-        }
+        move.target?.QueueFree();
+        // if (move.target != null)
+        // {
+        //     //board.pieces[move.target.pos.x, move.target.pos.y] = null;
+        // }
         board.pieces[pos.x, pos.y] = this;
         move.turn = board.turn;
         previousMoves.Add(move);
@@ -140,8 +140,8 @@ public abstract class Piece : Node2D
     public virtual void PerformMove(Move move)
     {
         MovePiece(move);
-        TogglePreviews();
         board.kings[(int)colour].UnCheck();
+        TogglePreviews();
         board.NextTurn(move, colour);
     }
 
@@ -155,14 +155,14 @@ public abstract class Piece : Node2D
         List<Move> moves = kingIsCheck ? DefendKing() : GetPosibleMoves();
         PackedScene scene = GD.Load<PackedScene>("res://Game/MovePreview.tscn");
 
-        if (moves == null || moves.Count() == 0)
+        if (moves == null || moves.Count == 0)
             return;
         foreach (Move move in moves)
         {
             if (move.noPreview)
                 continue;
             MovePreview preview = scene.Instance<MovePreview>();
-            preview.Init(move, this, board.tileSize);
+            preview.Init(move, board.tileSize);
             AddChild(preview);
             previews.Add(preview);
         }
@@ -223,18 +223,18 @@ public abstract class Piece : Node2D
 
     public void _on_Button_pressed()
     {
-        if (!IsTurn())
+        if (!IsTurn() || this != board.pieces[pos.x, pos.y])
             return;
         if (!kingIsCheck && GetType() != typeof(King))
         {
             board.pieces[pos.x, pos.y] = null;
             bool isCheck = board.kings[(int)colour].IsCheck();
             board.pieces[pos.x, pos.y] = this;
-            if (isCheck)
-            {
-                board.kings[(int)colour].UnCheck();
-                return;
-            }
+            // if (isCheck)
+            // {
+            //     board.kings[(int)colour].UnCheck();
+            //     return;
+            // }
         }
         if (!isPreviewing)
             TogglePreviews();

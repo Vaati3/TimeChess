@@ -12,15 +12,13 @@ public class MovePreview : Node2D
     [Export]
     Color yellow;
     Move move;
-    Piece owner;
     float tileSize;
-    public void Init(Move move, Piece owner, float tileSize)
+    public void Init(Move move, float tileSize)
     {
         this.move = move;
-        this.owner = owner;
         this.tileSize = tileSize;
 
-        Position = (move.pos * tileSize) - owner.Position;
+        Position = (move.pos * tileSize) - move.piece.Position;
         Visible = false;
         if (move.isCastling)
             GetNode<ColorRect>("Control/ColorRect").Color = yellow;
@@ -42,7 +40,7 @@ public class MovePreview : Node2D
                 if (move.isCastling)
                     ((King)move.piece).PerformCastling(move);
                 else
-                    owner.PerformMove(move);
+                    move.piece.PerformMove(move);
                 return true;
             }
         return false;

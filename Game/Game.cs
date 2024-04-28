@@ -16,7 +16,6 @@ public class Game : Control
 
     public void _on_Board_Checkmate(Colour winner)
     {
-        GD.Print("signal received");
         menu.Checkmate(winner);
     }
 
