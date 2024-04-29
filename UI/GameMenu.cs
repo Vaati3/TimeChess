@@ -35,7 +35,6 @@ public class GameMenu : Panel
 
     public void _on_BackButton_pressed()
     {
-        board.ResetPieces();
         Visible = false;
         EmitSignal(nameof(BackToMenu));
     }

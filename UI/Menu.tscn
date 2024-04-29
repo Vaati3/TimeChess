@@ -71,6 +71,85 @@ size_flags_vertical = 0
 text = "Quit"
 icon_align = 1
 
+[node name="OptionsMenu" type="Panel" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Title" type="Label" parent="OptionsMenu"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -145.0
+margin_top = 39.0
+margin_bottom = 82.0
+rect_scale = Vector2( 2, 2 )
+size_flags_vertical = 1
+text = "Options"
+align = 1
+valign = 1
+
+[node name="Label" type="Label" parent="OptionsMenu"]
+margin_left = 438.0
+margin_top = 137.0
+margin_right = 586.0
+margin_bottom = 163.0
+text = "Max Time Travel Fuel"
+align = 1
+valign = 1
+
+[node name="FuelLabel" type="Label" parent="OptionsMenu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -23.0
+margin_top = -117.0
+margin_right = 17.0
+margin_bottom = -103.0
+text = "10"
+align = 1
+valign = 1
+
+[node name="AddFuelBtn" type="Button" parent="OptionsMenu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 45.0
+margin_top = -122.0
+margin_right = 65.0
+margin_bottom = -102.0
+rect_min_size = Vector2( 20, 20 )
+text = ">"
+
+[node name="RemoveFuelBtn" type="Button" parent="OptionsMenu"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -66.0
+margin_top = -122.0
+margin_right = -46.0
+margin_bottom = -102.0
+rect_min_size = Vector2( 20, 20 )
+text = "<"
+
+[node name="QuitOptionBtn" type="Button" parent="OptionsMenu"]
+margin_left = 437.0
+margin_top = 375.0
+margin_right = 587.0
+margin_bottom = 425.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_min_size = Vector2( 150, 50 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Back to Menu"
+icon_align = 1
+
 [connection signal="pressed" from="StartMenu/VBoxContainer/PlayBtn" to="." method="_on_PlayBtn_pressed"]
 [connection signal="pressed" from="StartMenu/VBoxContainer/OptionBtn" to="." method="_on_OptionBtn_pressed"]
 [connection signal="pressed" from="StartMenu/VBoxContainer/QuitBtn" to="." method="_on_QuitBtn_pressed"]
+[connection signal="pressed" from="OptionsMenu/AddFuelBtn" to="." method="_on_AddFuelBtn_pressed"]
+[connection signal="pressed" from="OptionsMenu/RemoveFuelBtn" to="." method="_on_RemoveFuelBtn_pressed"]
+[connection signal="pressed" from="OptionsMenu/QuitOptionBtn" to="." method="_on_QuitOptionBtn_pressed"]

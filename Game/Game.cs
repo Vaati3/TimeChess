@@ -3,6 +3,7 @@ using System;
 
 public class Game : Control
 {
+    Menu startMenu;
     GameMenu menu;
     Board board;
     public override void _Ready()
@@ -11,7 +12,13 @@ public class Game : Control
         menu = GetNode<GameMenu>("GameMenu");
 
         menu.Init(board);
-       //board.Scale = new Vector2(1.5f, 1.5f);
+        startMenu = GetParent<Menu>();
+    }
+
+    public void StartGame(int maxFuel)
+    {
+        board.maxFuel = maxFuel;
+        board.ResetPieces();
     }
 
     public void _on_Board_Checkmate(Colour winner)
@@ -35,5 +42,6 @@ public class Game : Control
     public void _on_GameMenu_BackToMenu()
     {
         Visible = false;
+        startMenu.ToggleMenu(true);
     }
 }

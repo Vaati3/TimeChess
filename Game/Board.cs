@@ -41,6 +41,7 @@ public class Board : Node2D
     public King[] kings { get; private set;}
     public List<Move> allMoves { get; private set;}
     public int turn { get; private set;}
+    public int maxFuel { get; set;}
     public int[] timeFuel { get; private set;}
 
     //debug
@@ -88,8 +89,8 @@ public class Board : Node2D
 
         }
         turn = 1;
-        timeFuel[0] = 10;
-        timeFuel[1] = 10;
+        timeFuel[0] = maxFuel;
+        timeFuel[1] = maxFuel;
         EmitSignal(nameof(TimeTravel), timeFuel, Colour.Black);
         EmitSignal(nameof(TimeTravel), timeFuel, Colour.White);
         allMoves.Clear();
@@ -213,6 +214,5 @@ public class Board : Node2D
         kings = new King[2];
         timeFuel = new int[2];
         allMoves = new List<Move>();
-        ResetPieces();
     }
 }
