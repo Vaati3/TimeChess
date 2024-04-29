@@ -14,7 +14,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="Board" parent="." instance=ExtResource( 1 )]
-position = Vector2( 311, 99 )
+position = Vector2( 235, 0 )
+scale = Vector2( 1.5, 1.5 )
 
 [node name="GameMenu" parent="." instance=ExtResource( 3 )]
 visible = false
@@ -26,6 +27,27 @@ margin_right = 1012.0
 margin_bottom = 66.0
 text = "Menu"
 
+[node name="BlackFuel" type="Label" parent="."]
+margin_left = 50.0
+margin_top = 30.0
+margin_right = 147.0
+margin_bottom = 83.0
+rect_scale = Vector2( 1.5, 1.5 )
+text = "Fuel: 10"
+align = 1
+valign = 1
+
+[node name="WhiteFuel" type="Label" parent="."]
+margin_left = 50.0
+margin_top = 480.0
+margin_right = 147.0
+margin_bottom = 533.0
+rect_scale = Vector2( 1.5, 1.5 )
+text = "Fuel: 10"
+align = 1
+valign = 1
+
 [connection signal="Checkmate" from="Board" to="." method="_on_Board_Checkmate"]
+[connection signal="TimeTravel" from="Board" to="." method="_on_Board_TimeTravel"]
 [connection signal="BackToMenu" from="GameMenu" to="." method="_on_GameMenu_BackToMenu"]
 [connection signal="pressed" from="MenuButton" to="." method="_on_MenuButton_pressed"]

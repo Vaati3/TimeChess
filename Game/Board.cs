@@ -90,6 +90,8 @@ public class Board : Node2D
         turn = 1;
         timeFuel[0] = 10;
         timeFuel[1] = 10;
+        EmitSignal(nameof(TimeTravel), timeFuel, Colour.Black);
+        EmitSignal(nameof(TimeTravel), timeFuel, Colour.White);
         allMoves.Clear();
     }
 
@@ -169,6 +171,19 @@ public class Board : Node2D
         pieces[pawn.pos.x, pawn.pos.y].previousMoves = pawn.previousMoves;
         pawn.QueueFree();
         UpdatePieces(pieces[pawn.pos.x, pawn.pos.y].colour, false);//kings[(int)pawn.colour].IsCheck()
+    }
+
+
+    [Signal]
+    public delegate void TimeTravel(int[] timeFuel, Colour colour);
+
+    public void UpdateTimeFuel(int cost, Colour colour)
+    {
+        if (cost > 0)
+        {
+            timeFuel[(int)colour] -= cost;
+            EmitSignal(nameof(TimeTravel), timeFuel, colour);
+        }
     }
 
     public List<Move> GetAllPiecesMoves(Colour colour, bool defendKing = false)

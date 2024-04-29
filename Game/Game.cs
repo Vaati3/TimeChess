@@ -19,6 +19,14 @@ public class Game : Control
         menu.Checkmate(winner);
     }
 
+    public void _on_Board_TimeTravel(int[] timeFuel, Colour colour)
+    {
+        if (colour == Colour.Black)
+            GetNode<Label>("BlackFuel").Text = "Fuel: " + timeFuel[(int)colour].ToString();
+        else
+            GetNode<Label>("WhiteFuel").Text = "Fuel: " + timeFuel[(int)colour].ToString();
+    }
+
     public void _on_MenuButton_pressed()
     {
         menu.Visible = true;

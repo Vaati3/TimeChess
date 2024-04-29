@@ -126,15 +126,15 @@ public abstract class Piece : Node2D
         board.pieces[pos.x, pos.y] = null;
         pos = move.pos;
         Position = pos * board.tileSize;
-        move.target?.QueueFree();
-        // if (move.target != null)
-        // {
-        //     //board.pieces[move.target.pos.x, move.target.pos.y] = null;
-        // }
+        if (move.target != null)
+        {
+            board.pieces[move.target.pos.x, move.target.pos.y] = null;
+            move.target.QueueFree();
+        }
         board.pieces[pos.x, pos.y] = this;
         move.turn = board.turn;
         previousMoves.Add(move);
-        board.timeFuel[(int)colour] -= move.timeTravelCost;
+        board.UpdateTimeFuel(move.timeTravelCost, colour);
     }
 
     public virtual void PerformMove(Move move)
@@ -230,11 +230,11 @@ public abstract class Piece : Node2D
             board.pieces[pos.x, pos.y] = null;
             bool isCheck = board.kings[(int)colour].IsCheck();
             board.pieces[pos.x, pos.y] = this;
-            // if (isCheck)
-            // {
-            //     board.kings[(int)colour].UnCheck();
-            //     return;
-            // }
+            if (isCheck)
+            {
+                board.kings[(int)colour].UnCheck();
+                return;
+            }
         }
         if (!isPreviewing)
             TogglePreviews();
