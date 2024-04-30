@@ -44,6 +44,8 @@ public class Board : Node2D
     public int maxFuel { get; set;}
     public int[] timeFuel { get; private set;}
 
+    public SFXManager sfxManager { get; private set;}
+
     //debug
     private void PrintBoard()
     {
@@ -214,5 +216,7 @@ public class Board : Node2D
         kings = new King[2];
         timeFuel = new int[2];
         allMoves = new List<Move>();
+
+        sfxManager = GetNode<SFXManager>("/root/SFXManager");
     }
 }

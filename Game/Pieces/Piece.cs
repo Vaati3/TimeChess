@@ -139,6 +139,7 @@ public abstract class Piece : Node2D
 
     public virtual void PerformMove(Move move)
     {
+        board.sfxManager.Play(1);
         MovePiece(move);
         board.kings[(int)colour].UnCheck();
         TogglePreviews();
@@ -237,7 +238,10 @@ public abstract class Piece : Node2D
             }
         }
         if (!isPreviewing)
+        {
+            board.sfxManager.Play(0);
             TogglePreviews();
+        }
     }
 
     public override void _Input(InputEvent @event)
