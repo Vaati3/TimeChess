@@ -234,7 +234,7 @@ public abstract class Piece : Node2D
             if (isCheck)
             {
                 board.kings[(int)colour].UnCheck();
-                return;
+                kingIsCheck = true;
             }
         }
         if (!isPreviewing)

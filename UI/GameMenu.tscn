@@ -3,7 +3,7 @@
 [ext_resource path="res://UI/GameMenu.cs" type="Script" id=1]
 
 [node name="GameMenu" type="Panel"]
-self_modulate = Color( 1, 1, 1, 0.686275 )
+self_modulate = Color( 1, 1, 1, 0.819608 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
