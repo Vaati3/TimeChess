@@ -15,9 +15,9 @@ public class Game : Control
         startMenu = GetParent<Menu>();
     }
 
-    public void StartGame(int maxFuel)
+    public void StartGame(Settings settings)
     {
-        board.maxFuel = maxFuel;
+        board.settings = settings;
         board.ResetPieces();
     }
 

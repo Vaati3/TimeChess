@@ -41,7 +41,7 @@ public class Board : Node2D
     public King[] kings { get; private set;}
     public List<Move> allMoves { get; private set;}
     public int turn { get; private set;}
-    public int maxFuel { get; set;}
+    public Settings settings { get; set;}
     public int[] timeFuel { get; private set;}
 
     public SFXManager sfxManager { get; private set;}
@@ -91,8 +91,8 @@ public class Board : Node2D
 
         }
         turn = 1;
-        timeFuel[0] = maxFuel;
-        timeFuel[1] = maxFuel;
+        timeFuel[0] = settings.maxFuel;
+        timeFuel[1] = settings.maxFuel;
         EmitSignal(nameof(TimeTravel), timeFuel, Colour.Black);
         EmitSignal(nameof(TimeTravel), timeFuel, Colour.White);
         allMoves.Clear();

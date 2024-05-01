@@ -80,6 +80,25 @@ public class King : Piece
         board.NextTurn(move, colour);
     }
 
+    protected void TimeTravel(List<Move> moves, List<Move> danger)
+    {
+        if (previousMoves.Count == 0)
+            return;
+        for (int i = previousMoves.Count -1; i >= 0; i--)
+        {
+            Move move = previousMoves[i];
+            int cost = previousMoves.Count - i;
+            if (cost > board.timeFuel[(int)colour])
+                return;
+            if (MoveAlreadyExist(move, moves) || MoveAlreadyExist(move, danger))
+                continue;
+            if (board.pieces[move.origin.x, move.origin.y] == null || board.pieces[move.origin.x, move.origin.y].colour != colour)
+            {
+                moves.Add(new Move(this, move, cost, board.pieces[move.origin.x, move.origin.y]));
+            }
+        }
+    }
+
     protected bool CheckMove(List<Move> moves, int x, int y, List<Move> danger)
     {
         Vector2i newPos = new Vector2i(x, y);
@@ -103,6 +122,8 @@ public class King : Piece
             moves = GetPosibleMoves(danger);
             if (previousMoves.Count == 0 && !checkSignal.Visible)
                 CheckCastling(moves, danger);
+            if (board.settings.kingTimeTravel && !checkSignal.Visible)
+                TimeTravel(moves, danger);
         } else {
             moves = new List<Move>();
             CheckMove(moves, pos.x + 1, pos.y);

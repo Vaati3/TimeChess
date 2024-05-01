@@ -72,7 +72,7 @@ public abstract class Piece : Node2D
 
     public abstract List<Move> GetPosibleMoves();
 
-    private bool MoveAlreadyExist(Move previousMove, List<Move> moves)
+    protected bool MoveAlreadyExist(Move previousMove, List<Move> moves)
     {
         foreach(Move move in moves)
         {
@@ -85,12 +85,12 @@ public abstract class Piece : Node2D
     }
     protected void TimeTravel(List<Move> moves)
     {
-        if (previousMoves.Count() == 0)
+        if (previousMoves.Count == 0)
             return;
-        for (int i = previousMoves.Count()-1; i >= 0; i--)
+        for (int i = previousMoves.Count -1; i >= 0; i--)
         {
             Move move = previousMoves[i];
-            int cost = previousMoves.Count() - i;
+            int cost = previousMoves.Count - i;
             if (cost > board.timeFuel[(int)colour])
                 return;
             if (MoveAlreadyExist(move, moves))
