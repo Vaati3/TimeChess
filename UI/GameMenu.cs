@@ -24,17 +24,20 @@ public class GameMenu : Panel
 
     public void _on_ResumeButton_pressed()
     {
+        board.sfxManager.Play(2);
         Visible = false;
     }
 
     public void _on_RestartButton_pressed()
     {
+        board.sfxManager.Play(2);
         board.ResetPieces();
         Visible = false;
     }
 
     public void _on_BackButton_pressed()
     {
+        board.sfxManager.Play(2);
         Visible = false;
         EmitSignal(nameof(BackToMenu));
     }

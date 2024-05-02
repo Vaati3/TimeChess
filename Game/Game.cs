@@ -36,6 +36,7 @@ public class Game : Control
 
     public void _on_MenuButton_pressed()
     {
+        startMenu.sfxManager.Play(2);
         menu.Visible = true;
     }
 
