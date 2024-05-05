@@ -5,11 +5,13 @@ using System.Media;
 public struct Settings{
 	public int maxFuel;
 	public bool kingTimeTravel;
+	public bool timeTravelCapture;	
 
-	public Settings(int maxFuel, bool kingTimeTravel = false)
+	public Settings(int maxFuel)
 	{
 		this.maxFuel = maxFuel;
-		this.kingTimeTravel = kingTimeTravel;
+		this.kingTimeTravel = false;
+		timeTravelCapture = true;
 	}
 }
 
@@ -36,7 +38,7 @@ public class Menu : Control
 	private void ChangeMaxFuel(int change)
 	{
 		settings.maxFuel += change;
-		GetNode<Label>("OptionsMenu/FuelLabel").Text = settings.maxFuel.ToString();
+		GetNode<Label>("OptionsMenu/FuelValue").Text = settings.maxFuel.ToString();
 	}
 
 	//Menu Buttons Signals
@@ -81,9 +83,15 @@ public class Menu : Control
 		ChangeMaxFuel(-1);
 	}
 
-	public void _on_CheckBox_toggled(bool state)
+	public void _on_KingCheckbox_toggled(bool state)
 	{
 		sfxManager.Play(2);
 		settings.kingTimeTravel = state;
+	}
+
+	public void _on_CaptureCheckbox_toggled(bool state)
+	{
+		sfxManager.Play(2);
+		settings.timeTravelCapture = state;
 	}
 }

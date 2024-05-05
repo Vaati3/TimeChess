@@ -20,6 +20,7 @@ public class SFXManager : Node
         AddSound("res://Sounds/SelectPiece.wav");
         AddSound("res://Sounds/PlayPiece.wav");
         AddSound("res://Sounds/Button.wav");
+        AddSound("res://Sounds/TimeTravel.wav");
     }
 
     public override void _Process(float _delta)

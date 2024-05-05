@@ -93,6 +93,9 @@ public abstract class Piece : Node2D
             int cost = previousMoves.Count - i;
             if (cost > board.timeFuel[(int)colour])
                 return;
+            if (board.pieces[move.origin.x, move.origin.y] != null && 
+                (!board.settings.timeTravelCapture || board.pieces[move.origin.x, move.origin.y].colour == colour))
+                continue;
             if (MoveAlreadyExist(move, moves))
                 continue;
             if (board.pieces[move.origin.x, move.origin.y] == null || board.pieces[move.origin.x, move.origin.y].colour != colour)
@@ -139,7 +142,10 @@ public abstract class Piece : Node2D
 
     public virtual void PerformMove(Move move)
     {
-        board.sfxManager.Play(1);
+        if (move.timeTravelCost > 0)
+            board.sfxManager.Play(3);
+        else
+            board.sfxManager.Play(1);
         MovePiece(move);
         board.kings[(int)colour].UnCheck();
         TogglePreviews();
