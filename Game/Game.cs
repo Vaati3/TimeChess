@@ -6,10 +6,13 @@ public class Game : Control
     Menu startMenu;
     GameMenu menu;
     Board board;
+    AI ai;
     public override void _Ready()
     {
         board = GetNode<Board>("BoardControl/Board");
         menu = GetNode<GameMenu>("GameMenu");
+        ai = new AI(board);
+        AddChild(ai);
 
         menu.Init(board);
         startMenu = GetParent<Menu>();
@@ -17,7 +20,10 @@ public class Game : Control
 
     public void StartGame(Settings settings)
     {
+        Visible = true;
         board.settings = settings;
+        if (settings.playAI)
+            ai.colour = settings.AIColour;
         board.ResetPieces();
     }
 

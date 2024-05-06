@@ -121,6 +121,8 @@ public class Board : Node2D
             InstanciatePiece(scene, type, Colour.Black, x, 0);
             InstanciatePiece(scene, type, Colour.White, x, 7);
         }
+        if (settings.playAI && settings.AIColour == Colour.White)
+            EmitSignal(nameof(AITurn), false);
     }
 
     public void NextTurn(Move lastMove, Colour colour)
@@ -134,7 +136,7 @@ public class Board : Node2D
         if (kingIsCheck)
         {
             bool isCheckmate = true;
-            foreach(Move move in GetAllPiecesMoves(colour, true))
+            foreach(Move move in GetAllPiecesMoves(nextTurnColour, true))
             {
                 if (!move.noPreview)
                 {
@@ -145,8 +147,12 @@ public class Board : Node2D
             if (isCheckmate)
                 EmitSignal(nameof(Checkmate), colour);
         }
+        if (settings.playAI && settings.AIColour == nextTurnColour)
+            EmitSignal(nameof(AITurn), kingIsCheck);
     }
 
+    [Signal]
+    public delegate void AITurn(bool isCheck);
     [Signal]
     public delegate void Checkmate(Colour colour);
 
@@ -196,7 +202,7 @@ public class Board : Node2D
         {
             for (int x = 0; x < 8; x++)
             {
-                if (pieces[x, y] != null && pieces[x, y].colour != colour)
+                if (pieces[x, y] != null && pieces[x, y].colour == colour)
                 {
                     if (defendKing && pieces[x, y].GetType() != typeof(King))
                         moves.AddRange(pieces[x, y].DefendKing());

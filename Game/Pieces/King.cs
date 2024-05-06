@@ -31,7 +31,8 @@ public class King : Piece
 
     public bool IsCheck()
     {
-        List<Move> danger = board.GetAllPiecesMoves(colour);
+        Colour otherColour = colour == Colour.Black ? Colour.White : Colour.Black;
+        List<Move> danger = board.GetAllPiecesMoves(otherColour);
         bool isCheck = false;
     
             foreach (Move move in danger)
@@ -117,7 +118,8 @@ public class King : Piece
         if (IsTurn())
         {
             board.pieces[pos.x, pos.y] = null;
-            List<Move> danger = board.GetAllPiecesMoves(colour);
+            Colour otherColour = colour == Colour.Black ? Colour.White : Colour.Black;
+            List<Move> danger = board.GetAllPiecesMoves(otherColour);
             board.pieces[pos.x, pos.y] = this;
             moves = GetPosibleMoves(danger);
             if (previousMoves.Count == 0 && !checkSignal.Visible)

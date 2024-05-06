@@ -140,7 +140,7 @@ public abstract class Piece : Node2D
         board.UpdateTimeFuel(move.timeTravelCost, colour);
     }
 
-    public virtual void PerformMove(Move move)
+    public virtual void PerformMove(Move move, bool noPreview = false)
     {
         if (move.timeTravelCost > 0)
             board.sfxManager.Play(3);
@@ -148,7 +148,8 @@ public abstract class Piece : Node2D
             board.sfxManager.Play(1);
         MovePiece(move);
         board.kings[(int)colour].UnCheck();
-        TogglePreviews();
+        if (!noPreview)
+            TogglePreviews();
         board.NextTurn(move, colour);
     }
 
@@ -192,6 +193,8 @@ public abstract class Piece : Node2D
 
     protected bool IsTurn()
     {
+        if (board.settings.playAI && board.settings.AIColour == colour)
+            return false;
         return (colour == Colour.Black && board.turn % 2 == 0) || (colour == Colour.White && board.turn % 2 != 0);
     }
 

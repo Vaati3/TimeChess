@@ -6,12 +6,17 @@ public struct Settings{
 	public int maxFuel;
 	public bool kingTimeTravel;
 	public bool timeTravelCapture;	
+	public bool playAI;
+	public Colour AIColour;
 
 	public Settings(int maxFuel)
 	{
 		this.maxFuel = maxFuel;
 		this.kingTimeTravel = false;
 		timeTravelCapture = true;
+
+		playAI = false;
+		AIColour = Colour.Black;
 	}
 }
 
@@ -28,6 +33,7 @@ public class Menu : Control
 		settings = new Settings(10);
 
 		sfxManager = GetNode<SFXManager>("/root/SFXManager");
+		GD.Randomize();
 	}
 
 	public void ToggleMenu(bool state)
@@ -45,9 +51,17 @@ public class Menu : Control
 	public void _on_PlayBtn_pressed()
 	{
 		sfxManager.Play(2);
-		game.Visible = true;
+		settings.playAI = false;
 		game.StartGame(settings);
 		ToggleMenu(false);
+	}
+
+	public void _on_PlayAIBtn_pressed()
+	{
+		sfxManager.Play(2);
+		settings.playAI = true;
+		ToggleMenu(false);
+		GetNode<Panel>("AIColour").Visible = true;
 	}
 
 	public void _on_OptionBtn_pressed()
@@ -93,5 +107,34 @@ public class Menu : Control
 	{
 		sfxManager.Play(2);
 		settings.timeTravelCapture = state;
+	}
+
+	//colour select menu
+
+	public void _on_WhiteBtn_pressed()
+	{
+		sfxManager.Play(2);
+		settings.AIColour = Colour.Black;
+		GetNode<Panel>("AIColour").Visible = false;
+		game.StartGame(settings);
+	}
+
+	public void _on_BlackBtn_pressed()
+	{
+		sfxManager.Play(2);
+		settings.AIColour = Colour.White;
+		GetNode<Panel>("AIColour").Visible = false;
+		game.StartGame(settings);
+	}
+
+	public void _on_RandomBtn_pressed()
+	{
+		sfxManager.Play(2);
+		if (GD.Randi() % 2 == 0)
+			settings.AIColour = Colour.Black;
+		else
+			settings.AIColour = Colour.White;
+		GetNode<Panel>("AIColour").Visible = false;
+		game.StartGame(settings);
 	}
 }
