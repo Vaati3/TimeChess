@@ -5,6 +5,8 @@ public class GameMenu : Panel
 {
     Board board;
 
+    bool isCheckmate = false;
+
     [Signal]
     public delegate void BackToMenu();
     public void Init(Board board)
@@ -20,6 +22,7 @@ public class GameMenu : Panel
         label.Text = "Checkmate\n" + winner + "s Win";
         GetNode<Button>("VBoxContainer/ResumeButton").Visible = false;
         Visible = true;
+        isCheckmate = true;
     }
 
     public void _on_ResumeButton_pressed()
@@ -30,6 +33,12 @@ public class GameMenu : Panel
 
     public void _on_RestartButton_pressed()
     {
+        if (isCheckmate)
+        {
+            GetNode<Label>("Label").Visible = false;
+            GetNode<Button>("VBoxContainer/ResumeButton").Visible = true;
+            isCheckmate = false;
+        }
         board.sfxManager.Play(2);
         board.ResetPieces();
         Visible = false;
@@ -37,6 +46,12 @@ public class GameMenu : Panel
 
     public void _on_BackButton_pressed()
     {
+        if (isCheckmate)
+        {
+            GetNode<Label>("Label").Visible = false;
+            GetNode<Button>("VBoxContainer/ResumeButton").Visible = true;
+            isCheckmate = false;
+        }
         board.sfxManager.Play(2);
         Visible = false;
         EmitSignal(nameof(BackToMenu));

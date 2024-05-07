@@ -50,6 +50,7 @@ public abstract class Piece : Node2D
 {
     public Colour colour { get; private set;}
     public Vector2i pos { get; private set;}
+    public int value {get; protected set;}
     public List<Move> previousMoves { get; set;}
     protected Board board { get; private set;}
     protected bool isPreviewing { get; private set;}

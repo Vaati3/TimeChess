@@ -52,9 +52,33 @@ public class AI : Node
         return possibleMoves;
     }
 
+    private List<Move> Agressivity(List<Move> moves)
+    {
+        int bestValue = -1;
+
+        foreach(Move move in moves)
+        {
+            if (move.target != null)
+                bestValue = Math.Max(bestValue, move.target.value);
+        }
+        if (bestValue < 0)
+            return moves;
+
+        List<Move> attacks = new List<Move>();
+        foreach(Move move in moves)
+        {
+            if (move.target != null)
+            {
+                if (move.target.value == bestValue)
+                    attacks.Add(move);
+            }
+        }
+        return attacks;
+    }
+
     private void PlayMove()
     {
-        List<Move> moves = GetPossibleMoves();
+        List<Move> moves = Agressivity(GetPossibleMoves());
 
         if (moves.Count == 0)
             return;

@@ -6,6 +6,7 @@ public class Pawn : Piece
 {
     public override void Init(Board board, Colour colour, int x, int y)
     {
+        value = 1;
         base.Init(board, colour, x, y);
         if (colour == Colour.Black)
         {

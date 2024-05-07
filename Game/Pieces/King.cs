@@ -8,6 +8,7 @@ public class King : Piece
     private ColorRect checkSignal;
     public override void Init(Board board, Colour colour, int x, int y)
     {
+        value = -1;
         base.Init(board, colour, x, y);
         attacker = null;
         checkSignal = new ColorRect();

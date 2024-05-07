@@ -6,6 +6,7 @@ public class Queen : Piece
 {
     public override void Init(Board board, Colour colour, int x, int y)
     {
+        value = 9;
         base.Init(board, colour, x, y);
         if (colour == Colour.Black)
         {
