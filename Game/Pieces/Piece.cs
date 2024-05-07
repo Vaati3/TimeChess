@@ -193,8 +193,6 @@ public abstract class Piece : Node2D
 
     protected bool IsTurn()
     {
-        if (board.settings.playAI && board.settings.AIColour == colour)
-            return false;
         return (colour == Colour.Black && board.turn % 2 == 0) || (colour == Colour.White && board.turn % 2 != 0);
     }
 
@@ -233,6 +231,8 @@ public abstract class Piece : Node2D
 
     public void _on_Button_pressed()
     {
+        if (board.settings.playAI && board.settings.AIColour == colour)
+            return;
         if (!IsTurn() || this != board.pieces[pos.x, pos.y])
             return;
         if (!kingIsCheck && GetType() != typeof(King))

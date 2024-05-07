@@ -21,7 +21,7 @@ public class Bishop : Piece
         bool topR, TopL, downR, downL;
         topR = TopL = downR = downL = false;
 
-        for(int i = 1; i < 7; i++)
+        for(int i = 1; i < 8; i++)
         {
             if (!topR)
                 topR = CheckMove(moves, pos.x + i, pos.y + i);

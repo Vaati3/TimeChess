@@ -22,7 +22,7 @@ public class Rook : Piece
         bool right, left, top, down;
         right = left = top = down = false;
 
-        for(int i = 1; i < 7; i++)
+        for(int i = 1; i < 8; i++)
         {
             if (!right)
                 right = CheckMove(moves, pos.x + i, pos.y);
