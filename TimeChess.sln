@@ -1,6 +1,6 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4DChess", "4DChess.csproj", "{9D7DA267-D5B5-4166-BF8A-0F0A283F2D31}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeChess", "TimeChess.csproj", "{9D7DA267-D5B5-4166-BF8A-0F0A283F2D31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
