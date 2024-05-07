@@ -43,8 +43,10 @@ public class Board : Node2D
     public int turn { get; private set;}
     public Settings settings { get; set;}
     public int[] timeFuel { get; private set;}
-
     public SFXManager sfxManager { get; private set;}
+    [Export]
+    public Color lastMoveColour;
+    ColorRect[] lastMove;
 
     //debug
     private void PrintBoard()
@@ -96,6 +98,8 @@ public class Board : Node2D
         EmitSignal(nameof(TimeTravel), timeFuel, Colour.Black);
         EmitSignal(nameof(TimeTravel), timeFuel, Colour.White);
         allMoves.Clear();
+        lastMove[0].Visible = false;
+        lastMove[1].Visible = false;
     }
 
     public void ResetPieces()
@@ -123,6 +127,17 @@ public class Board : Node2D
         }
         if (settings.playAI && settings.AIColour == Colour.White)
             EmitSignal(nameof(AITurn), false);
+    }
+
+    public void moveLastMove(Vector2i lastPos, Vector2i newPos)
+    {
+        if (!lastMove[0].Visible)
+        {
+            lastMove[0].Visible = true;
+            lastMove[1].Visible = true;
+        }
+        lastMove[0].RectPosition = lastPos * tileSize;
+        lastMove[1].RectPosition = newPos * tileSize;
     }
 
     public void NextTurn(Move lastMove, Colour colour)
@@ -213,7 +228,26 @@ public class Board : Node2D
         }
 
         return moves;
-    } 
+    }
+
+    private void InitLastMove()
+    {
+        Vector2 size = new Vector2(tileSize, tileSize);
+        lastMove = new ColorRect[2];
+        lastMove[0] = new ColorRect
+        {
+            RectSize = size,
+            Color = lastMoveColour
+        };
+        lastMove[1] = new ColorRect
+        {
+            RectSize = size,
+            Color = lastMoveColour
+        };
+
+        AddChild(lastMove[0]);
+        AddChild(lastMove[1]);
+    }
 
     public override void _Ready()
     {
@@ -222,6 +256,7 @@ public class Board : Node2D
         kings = new King[2];
         timeFuel = new int[2];
         allMoves = new List<Move>();
+        InitLastMove();
 
         sfxManager = GetNode<SFXManager>("/root/SFXManager");
     }
