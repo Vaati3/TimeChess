@@ -1,2 +1,2 @@
-# 4DChess
+# TimeChess
 Chess with time travel

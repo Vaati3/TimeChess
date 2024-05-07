@@ -29,7 +29,7 @@ common/drop_mouse_on_gui_input_disabled=true
 
 [mono]
 
-project/assembly_name="4DChess"
+project/assembly_name="TimeChess"
 
 [physics]
 

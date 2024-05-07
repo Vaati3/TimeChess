@@ -34,6 +34,9 @@ public class Menu : Control
 
 		sfxManager = GetNode<SFXManager>("/root/SFXManager");
 		GD.Randomize();
+
+		if (OS.GetName() == "HTML5")
+			GetNode<Button>("StartMenu/VBoxContainer/QuitBtn").Visible = false;
 	}
 
 	public void ToggleMenu(bool state)
