@@ -18,11 +18,11 @@ public class Pawn : Piece
 
     public override void PerformMove(Move move, bool noPreview = false)
     {
+        base.PerformMove(move);
         if ((colour == Colour.Black && pos.y == 7) || (colour == Colour.White && pos.y == 0))
         {
             board.PromotePawn(this);
         }
-        base.PerformMove(move, noPreview);
     }
 
     private void EnPassant(List<Move> moves, int x, int y, int dir)
