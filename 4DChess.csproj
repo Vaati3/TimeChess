@@ -2,5 +2,6 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <RootNamespace>DChess</RootNamespace>
+    <NoWarn>649</NoWarn>
   </PropertyGroup>
 </Project>

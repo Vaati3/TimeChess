@@ -18,10 +18,18 @@ public class Pawn : Piece
 
     public override void PerformMove(Move move, bool noPreview = false)
     {
-        base.PerformMove(move);
-        if ((colour == Colour.Black && pos.y == 7) || (colour == Colour.White && pos.y == 0))
+        if ((colour == Colour.Black && move.pos.y == 7) || (colour == Colour.White && move.pos.y == 0))
         {
-            board.PromotePawn(this);
+            board.sfxManager.Play(1);
+            board.moveLastMove(pos, move.pos);
+            MovePiece(move);
+            board.kings[(int)colour].UnCheck();
+            if (!noPreview)
+                TogglePreviews();
+            board.PromotePawn(this, move);
+        }
+        else{
+            base.PerformMove(move, noPreview);
         }
     }
 

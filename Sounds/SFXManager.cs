@@ -5,10 +5,16 @@ using System.Linq;
 
 public class SFXManager : Node
 {
-    string bus = "master";
+    //string bus = "master";
     AudioStreamPlayer player;
     List<AudioStream> sounds;
     Queue<int> soundQueue;
+    readonly string[] soundPaths = {
+        "res://Sounds/SelectPiece.wav",
+        "res://Sounds/PlayPiece.wav",
+        "res://Sounds/Button.wav",
+        "res://Sounds/TimeTravel.wav"
+    };
 
     public override void _Ready()
     {
@@ -17,10 +23,10 @@ public class SFXManager : Node
         soundQueue = new Queue<int>();
         AddChild(player);
 
-        AddSound("res://Sounds/SelectPiece.wav");
-        AddSound("res://Sounds/PlayPiece.wav");
-        AddSound("res://Sounds/Button.wav");
-        AddSound("res://Sounds/TimeTravel.wav");
+        foreach(string path in soundPaths)
+        {
+            AddSound(path);
+        }
     }
 
     public override void _Process(float _delta)

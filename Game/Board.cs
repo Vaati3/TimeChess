@@ -65,7 +65,7 @@ public class Board : Node2D
         }
     }
 
-    private void InstanciatePiece(PackedScene scene, string type, Colour colour, int x, int y)
+    public void InstanciatePiece(PackedScene scene, string type, Colour colour, int x, int y)
     {
         Piece inst = scene.Instance<Piece>();
         ulong id = inst.GetInstanceId();
@@ -189,12 +189,12 @@ public class Board : Node2D
         }
     }
 
-    public void PromotePawn(Piece pawn)
+    public void PromotePawn(Piece pawn, Move move)
     {
         InstanciatePiece(GD.Load<PackedScene>("res://Game/Pieces/Piece.tscn"), "Queen", pawn.colour, pawn.pos.x, pawn.pos.y);
         pieces[pawn.pos.x, pawn.pos.y].previousMoves = pawn.previousMoves;
         pawn.QueueFree();
-        UpdatePieces(pieces[pawn.pos.x, pawn.pos.y].colour, false);//kings[(int)pawn.colour].IsCheck()
+        NextTurn(move, pieces[pawn.pos.x, pawn.pos.y].colour);
     }
 
 
