@@ -39,7 +39,6 @@ public class Board : Node2D
     public float tileSize { get; private set;}
     public Piece[,] pieces { get; private set;}
     public King[] kings { get; private set;}
-    public List<Move> allMoves { get; private set;}
     public int turn { get; private set;}
     public Settings settings { get; set;}
     public int[] timeFuel { get; private set;}
@@ -47,23 +46,6 @@ public class Board : Node2D
     [Export]
     public Color lastMoveColour;
     ColorRect[] lastMove;
-
-    //debug
-    private void PrintBoard()
-    {
-        for (int y = 0; y < 8; y++)
-        {
-            String str = "";
-            for (int x = 0; x < 8; x++)
-            {
-                if (pieces[x,y] != null)
-                    str += pieces[x,y].GetType();
-                else
-                    str += "null";
-            }
-            GD.Print(str);
-        }
-    }
 
     public void InstanciatePiece(PackedScene scene, string type, Colour colour, int x, int y)
     {
@@ -97,7 +79,6 @@ public class Board : Node2D
         timeFuel[1] = settings.maxFuel;
         EmitSignal(nameof(TimeTravel), timeFuel, Colour.Black);
         EmitSignal(nameof(TimeTravel), timeFuel, Colour.White);
-        allMoves.Clear();
         lastMove[0].Visible = false;
         lastMove[1].Visible = false;
     }
@@ -129,7 +110,7 @@ public class Board : Node2D
             EmitSignal(nameof(AITurn), false);
     }
 
-    public void moveLastMove(Vector2i lastPos, Vector2i newPos)
+    public void MoveLastMove(Vector2i lastPos, Vector2i newPos)
     {
         if (!lastMove[0].Visible)
         {
@@ -140,12 +121,107 @@ public class Board : Node2D
         lastMove[1].RectPosition = newPos * tileSize;
     }
 
+    private string CoordFromPos(Vector2i pos)
+    {
+        return "" + (char)(pos.x + 97) + Math.Abs(pos.y - 8);
+    }
+    private string CoordFromPos(Vector2 pos)
+    {
+        return "" + (char)(pos.x + 97) + Math.Abs(pos.y - 8);
+    }
+
+    private string disambiguate(Move move)
+    {
+        Vector2 lastPos = lastMove[0].RectPosition/tileSize;
+        if (move.timeTravelCost > 0)
+            return CoordFromPos(lastPos);
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                if (pieces[x,y] == null)
+                    continue;
+                if (pieces[x,y].pos != move.piece.pos && 
+                    pieces[x,y].colour == move.piece.colour && 
+                    pieces[x,y].GetType() == move.piece.GetType())
+                {
+                    foreach(Move otherMove in pieces[x,y].GetPosibleMoves())
+                    {
+                        if (otherMove.pos == move.pos)
+                        {
+                            if (otherMove.piece.pos.x != lastPos.x)
+                                return "" + (char)(lastPos.x + 97);
+                            else
+                                return "" + Math.Abs(lastPos.y - 8);
+                            
+                        }
+                    }
+
+                }
+            }
+        }
+        return "";
+    }
+
+    private string PawnNotation(Move move, bool isCheck)
+    {
+        string notation = move.timeTravelCost > 0 ? CoordFromPos(lastMove[0].RectPosition/tileSize) : "";
+        bool enPassant = false;
+        if (move.target != null)
+        {
+            if (move.timeTravelCost > 0)
+                notation += "x" + CoordFromPos(move.pos);
+            else {
+                notation += (char)(lastMove[0].RectPosition.x/tileSize + 97) + "x" + (char)(move.pos.x + 97);
+                if (move.target.pos != move.pos)
+                    enPassant = true;
+            }
+        } else {
+            notation += CoordFromPos(move.pos);
+        }
+        if ((move.piece.colour == Colour.Black && move.pos.y == 7) || 
+            (move.piece.colour == Colour.White && move.pos.y == 0))
+            notation += "=Q";
+        if (enPassant)
+            notation += " e.p.";
+        return notation;
+    }
+
+    private string NotationFromMove(Move move, bool isCheck, bool checkmate)
+    {
+        if (move.isCastling)
+        {
+            if (move.pos.x == 2)
+                return "O-O-O";
+            else 
+                return "O-O";
+        }
+        string notation = move.timeTravelCost > 0 ? "<" : "";
+        if (move.piece.GetType() == typeof(Pawn))
+            notation += PawnNotation(move, isCheck);
+        else {
+            if (move.piece.GetType() == typeof(Knight))
+                notation += "N";
+            else
+                notation += move.piece.GetType().ToString().Substring(0, 1);
+            notation += disambiguate(move);
+            if (move.target != null)
+                notation += "x";
+            notation += CoordFromPos(move.pos);
+        }
+        if (checkmate)
+            notation += "#";
+        else if (isCheck)
+            notation += "+";
+        return notation;
+    }
+
     public void NextTurn(Move lastMove, Colour colour)
     {
         turn++;
-        allMoves.Add(lastMove);
         Colour nextTurnColour = colour == Colour.Black ? Colour.White : Colour.Black;
         bool kingIsCheck = kings[(int)nextTurnColour].IsCheck();
+        bool checkmate = false;
         UpdatePieces(nextTurnColour, kingIsCheck);
 
         if (kingIsCheck)
@@ -160,14 +236,20 @@ public class Board : Node2D
                 }
             }
             if (isCheckmate)
-                EmitSignal(nameof(Checkmate), colour);
+                {
+                    EmitSignal(nameof(Checkmate), colour);
+                    checkmate = true;
+                }
         }
         if (settings.playAI && settings.AIColour == nextTurnColour)
             EmitSignal(nameof(AITurn), kingIsCheck);
+        EmitSignal(nameof(MoveOver), NotationFromMove(lastMove, kingIsCheck, checkmate));
     }
 
     [Signal]
     public delegate void AITurn(bool isCheck);
+    [Signal]
+    public delegate void MoveOver(string notation);
     [Signal]
     public delegate void Checkmate(Colour colour);
 
@@ -255,7 +337,6 @@ public class Board : Node2D
         pieces = new Piece[8,8];
         kings = new King[2];
         timeFuel = new int[2];
-        allMoves = new List<Move>();
         InitLastMove();
 
         sfxManager = GetNode<SFXManager>("/root/SFXManager");

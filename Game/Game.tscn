@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Game/Board.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Game/Game.cs" type="Script" id=2]
@@ -6,6 +6,13 @@
 [ext_resource path="res://UI/Resources/PanelTheme.tres" type="Theme" id=4]
 [ext_resource path="res://UI/Resources/DynamicFont.tres" type="DynamicFont" id=5]
 [ext_resource path="res://UI/Resources/BtnTheme.tres" type="Theme" id=6]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.329412, 0.396078, 0.443137, 1 )
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
 
 [node name="Game" type="Control"]
 anchor_right = 1.0
@@ -28,20 +35,20 @@ margin_right = 512.0
 margin_bottom = 300.0
 
 [node name="BlackFuel" type="Label" parent="BoardControl"]
-margin_left = 130.0
-margin_top = 115.0
-margin_right = 247.0
-margin_bottom = 168.0
+margin_left = 800.0
+margin_top = 124.0
+margin_right = 917.0
+margin_bottom = 177.0
 custom_fonts/font = ExtResource( 5 )
 text = "Time Fuel: 10"
 align = 1
 valign = 1
 
 [node name="WhiteFuel" type="Label" parent="BoardControl"]
-margin_left = 130.0
-margin_top = 415.0
-margin_right = 247.0
-margin_bottom = 468.0
+margin_left = 800.0
+margin_top = 425.0
+margin_right = 917.0
+margin_bottom = 478.0
 custom_fonts/font = ExtResource( 5 )
 text = "Time Fuel: 10"
 align = 1
@@ -228,7 +235,26 @@ text = "Menu"
 [node name="GameMenu" parent="." instance=ExtResource( 3 )]
 visible = false
 
+[node name="MovesPanel" type="Panel" parent="."]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 65.0
+margin_top = -200.0
+margin_right = 250.0
+margin_bottom = 199.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="Moves" type="VBoxContainer" parent="MovesPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 15.0
+margin_top = 13.0
+margin_right = -14.0
+margin_bottom = -12.0
+
 [connection signal="Checkmate" from="BoardControl/Board" to="." method="_on_Board_Checkmate"]
+[connection signal="MoveOver" from="BoardControl/Board" to="." method="_on_Board_MoveOver"]
 [connection signal="TimeTravel" from="BoardControl/Board" to="." method="_on_Board_TimeTravel"]
 [connection signal="pressed" from="MenuButton" to="." method="_on_MenuButton_pressed"]
 [connection signal="BackToMenu" from="GameMenu" to="." method="_on_GameMenu_BackToMenu"]
+[connection signal="RestartGame" from="GameMenu" to="." method="_on_GameMenu_RestartGame"]

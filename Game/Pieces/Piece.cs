@@ -147,7 +147,7 @@ public abstract class Piece : Node2D
             board.sfxManager.Play(3);
         else
             board.sfxManager.Play(1);
-        board.moveLastMove(pos, move.pos);
+        board.MoveLastMove(pos, move.pos);
         MovePiece(move);
         board.kings[(int)colour].UnCheck();
         if (!noPreview)

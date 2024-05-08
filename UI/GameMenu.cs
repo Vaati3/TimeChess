@@ -3,15 +3,18 @@ using System;
 
 public class GameMenu : Panel
 {
-    Board board;
-
     bool isCheckmate = false;
+    SFXManager sfxManager;
 
     [Signal]
     public delegate void BackToMenu();
-    public void Init(Board board)
+
+    [Signal]
+    public delegate void RestartGame();
+
+    public override void _Ready()
     {
-        this.board = board;
+        sfxManager = GetNode<SFXManager>("/root/SFXManager");
     }
 
     public void Checkmate(Colour winner)
@@ -27,7 +30,7 @@ public class GameMenu : Panel
 
     public void _on_ResumeButton_pressed()
     {
-        board.sfxManager.Play(2);
+        sfxManager.Play(2);
         Visible = false;
     }
 
@@ -39,8 +42,7 @@ public class GameMenu : Panel
             GetNode<Button>("VBoxContainer/ResumeButton").Visible = true;
             isCheckmate = false;
         }
-        board.sfxManager.Play(2);
-        board.ResetPieces();
+        EmitSignal(nameof(RestartGame));
         Visible = false;
     }
 
@@ -52,7 +54,7 @@ public class GameMenu : Panel
             GetNode<Button>("VBoxContainer/ResumeButton").Visible = true;
             isCheckmate = false;
         }
-        board.sfxManager.Play(2);
+        sfxManager.Play(2);
         Visible = false;
         EmitSignal(nameof(BackToMenu));
     }
