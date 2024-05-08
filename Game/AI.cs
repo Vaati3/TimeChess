@@ -84,7 +84,7 @@ public class AI : Node
             return;
         int index = rng.RandiRange(0, moves.Count-1);
         if (moves[index].isCastling)
-            ((King)moves[index].piece).PerformCastling(moves[index]);
+            ((King)moves[index].piece).PerformCastling(moves[index], true);
         else
             moves[index].piece.PerformMove(moves[index], true);
     }
@@ -92,6 +92,6 @@ public class AI : Node
     public void _on_AI_turn(bool isChecked)
     {
         this.isChecked = isChecked;
-        timer.Start(1);
+        timer.Start(0.75f);
     }
 }

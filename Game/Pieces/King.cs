@@ -72,14 +72,15 @@ public class King : Piece
         }
     }
 
-    public void PerformCastling(Move move)
+    public void PerformCastling(Move move, bool noPreview = false)
     {
         board.sfxManager.Play(1);
         board.moveLastMove(pos, move.pos);
         MovePiece(new Move(this, move.pos.x, move.pos.y, false));
         int x = move.pos.x == 2 ? 3 : 5;
         move.target.MovePiece(new Move(move.target, x, move.pos.y, false));
-        TogglePreviews();
+        if (!noPreview)
+            TogglePreviews();
         board.NextTurn(move, colour);
     }
 

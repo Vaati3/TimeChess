@@ -46,6 +46,8 @@ public class Menu : Control
 
 	private void ChangeMaxFuel(int change)
 	{
+		if (settings.maxFuel + change < 0 || settings.maxFuel + change > 99)
+			return;
 		settings.maxFuel += change;
 		GetNode<Label>("OptionsMenu/FuelValue").Text = settings.maxFuel.ToString();
 	}

@@ -3,9 +3,9 @@
 [ext_resource path="res://Game/Board.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Game/Game.cs" type="Script" id=2]
 [ext_resource path="res://UI/GameMenu.tscn" type="PackedScene" id=3]
-[ext_resource path="res://UI/PanelTheme.tres" type="Theme" id=4]
-[ext_resource path="res://UI/DynamicFont.tres" type="DynamicFont" id=5]
-[ext_resource path="res://UI/BtnTheme.tres" type="Theme" id=6]
+[ext_resource path="res://UI/Resources/PanelTheme.tres" type="Theme" id=4]
+[ext_resource path="res://UI/Resources/DynamicFont.tres" type="DynamicFont" id=5]
+[ext_resource path="res://UI/Resources/BtnTheme.tres" type="Theme" id=6]
 
 [node name="Game" type="Control"]
 anchor_right = 1.0
@@ -28,33 +28,33 @@ margin_right = 512.0
 margin_bottom = 300.0
 
 [node name="BlackFuel" type="Label" parent="BoardControl"]
-margin_left = 150.0
+margin_left = 130.0
 margin_top = 115.0
 margin_right = 247.0
 margin_bottom = 168.0
 custom_fonts/font = ExtResource( 5 )
-text = "Fuel: 10"
+text = "Time Fuel: 10"
 align = 1
 valign = 1
 
 [node name="WhiteFuel" type="Label" parent="BoardControl"]
-margin_left = 150.0
+margin_left = 130.0
 margin_top = 415.0
 margin_right = 247.0
 margin_bottom = 468.0
 custom_fonts/font = ExtResource( 5 )
-text = "Fuel: 10"
+text = "Time Fuel: 10"
 align = 1
 valign = 1
 
 [node name="Board" parent="BoardControl" instance=ExtResource( 1 )]
-position = Vector2( 320, 100 )
+position = Vector2( 338, 100 )
 lastMoveColour = Color( 0, 0.438965, 0.484375, 0.54902 )
 
 [node name="LinesLabels" type="VBoxContainer" parent="BoardControl"]
-margin_left = 280.0
+margin_left = 298.0
 margin_top = 111.0
-margin_right = 320.0
+margin_right = 338.0
 margin_bottom = 493.0
 custom_constants/separation = 21
 
@@ -130,9 +130,9 @@ align = 1
 valign = 1
 
 [node name="ColumnLabels" type="HBoxContainer" parent="BoardControl"]
-margin_left = 339.0
+margin_left = 357.0
 margin_top = 61.0
-margin_right = 718.0
+margin_right = 736.0
 margin_bottom = 101.0
 custom_constants/separation = 38
 

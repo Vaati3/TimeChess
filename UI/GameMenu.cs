@@ -19,7 +19,7 @@ public class GameMenu : Panel
         Label label = GetNode<Label>("Label");
 
         label.Visible = true;
-        label.Text = "Checkmate\n" + winner + "s Win";
+        label.Text = "Checkmate\n" + winner + "s  have won";
         GetNode<Button>("VBoxContainer/ResumeButton").Visible = false;
         Visible = true;
         isCheckmate = true;

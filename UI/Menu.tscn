@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://UI/Menu.cs" type="Script" id=1]
-[ext_resource path="res://UI/PanelTheme.tres" type="Theme" id=2]
-[ext_resource path="res://UI/DynamicFont.tres" type="DynamicFont" id=3]
-[ext_resource path="res://UI/Dosis-Regular.ttf" type="DynamicFontData" id=5]
-[ext_resource path="res://UI/BtnTheme.tres" type="Theme" id=6]
+[ext_resource path="res://UI/Resources/PanelTheme.tres" type="Theme" id=2]
+[ext_resource path="res://UI/Resources/DynamicFont.tres" type="DynamicFont" id=3]
+[ext_resource path="res://UI/VolumeSlider.tscn" type="PackedScene" id=4]
+[ext_resource path="res://UI/Resources/Dosis-Regular.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://UI/Resources/BtnTheme.tres" type="Theme" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 57
@@ -30,8 +31,8 @@ corner_radius_bottom_left = 2
 [node name="Menu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -2.0
-margin_right = -2.0
+margin_left = 1.0
+margin_right = 1.0
 script = ExtResource( 1 )
 
 [node name="StartMenu" type="Panel" parent="."]
@@ -139,12 +140,12 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -76.0
+margin_left = -79.0
 margin_top = -158.0
-margin_right = 72.0
+margin_right = 80.0
 margin_bottom = -132.0
 custom_fonts/font = SubResource( 3 )
-text = "Max Time Travel Fuel"
+text = "Amount of time  fuel"
 align = 1
 valign = 1
 
@@ -223,7 +224,7 @@ margin_top = -21.0
 margin_right = 52.0
 margin_bottom = 5.0
 custom_fonts/font = SubResource( 3 )
-text = "Time Travel can Capture"
+text = "Time Travelers can Capture"
 align = 1
 valign = 1
 
@@ -245,9 +246,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 margin_left = -76.0
-margin_top = -176.0
+margin_top = -150.0
 margin_right = 74.0
-margin_bottom = -126.0
+margin_bottom = -100.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_min_size = Vector2( 150, 50 )
@@ -256,6 +257,14 @@ size_flags_vertical = 0
 theme = ExtResource( 6 )
 text = "Back to Menu"
 icon_align = 1
+
+[node name="VolumeSlider" parent="OptionsMenu" instance=ExtResource( 4 )]
+margin_left = 314.0
+margin_top = 341.0
+margin_right = 714.0
+margin_bottom = 401.0
+label = "Volume"
+bus = "Master"
 
 [node name="AIColour" type="Panel" parent="."]
 visible = false
@@ -284,7 +293,7 @@ rect_min_size = Vector2( 150, 50 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme = ExtResource( 6 )
-text = "Play White"
+text = "Play Whites"
 icon_align = 1
 
 [node name="BlackBtn" type="Button" parent="AIColour/VBoxContainer"]
@@ -297,7 +306,7 @@ rect_min_size = Vector2( 150, 50 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme = ExtResource( 6 )
-text = "Play Black"
+text = "Play Blacks"
 icon_align = 1
 
 [node name="RandomBtn" type="Button" parent="AIColour/VBoxContainer"]
