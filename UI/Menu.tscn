@@ -1,7 +1,31 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://UI/Menu.cs" type="Script" id=1]
 [ext_resource path="res://UI/PanelTheme.tres" type="Theme" id=2]
+[ext_resource path="res://UI/DynamicFont.tres" type="DynamicFont" id=3]
+[ext_resource path="res://UI/Dosis-Regular.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://UI/BtnTheme.tres" type="Theme" id=6]
+
+[sub_resource type="DynamicFont" id=1]
+size = 57
+use_filter = true
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 44
+use_filter = true
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=3]
+use_filter = true
+font_data = ExtResource( 5 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.329412, 0.396078, 0.443137, 1 )
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
 [node name="Menu" type="Control"]
 anchor_right = 1.0
@@ -19,11 +43,11 @@ theme = ExtResource( 2 )
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -215.0
-margin_top = 24.0
-margin_right = -70.0
-margin_bottom = 67.0
-rect_scale = Vector2( 3, 3 )
+margin_top = 21.0
+margin_right = 220.0
+margin_bottom = 149.0
 size_flags_vertical = 1
+custom_fonts/font = SubResource( 1 )
 text = "TIME  CHESS"
 align = 1
 valign = 1
@@ -48,6 +72,7 @@ grow_vertical = 2
 rect_min_size = Vector2( 150, 50 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
+theme = ExtResource( 6 )
 text = "Play Game"
 icon_align = 1
 
@@ -60,6 +85,7 @@ grow_vertical = 2
 rect_min_size = Vector2( 150, 50 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
+theme = ExtResource( 6 )
 text = "Play Against AI"
 icon_align = 1
 
@@ -72,6 +98,7 @@ grow_vertical = 2
 rect_min_size = Vector2( 150, 50 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
+theme = ExtResource( 6 )
 text = "Options"
 icon_align = 1
 
@@ -84,6 +111,7 @@ grow_vertical = 2
 rect_min_size = Vector2( 150, 50 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
+theme = ExtResource( 6 )
 text = "Quit"
 icon_align = 1
 
@@ -98,9 +126,10 @@ anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -145.0
 margin_top = 39.0
-margin_bottom = 82.0
-rect_scale = Vector2( 2, 2 )
+margin_right = 145.0
+margin_bottom = 121.0
 size_flags_vertical = 1
+custom_fonts/font = SubResource( 2 )
 text = "Options"
 align = 1
 valign = 1
@@ -114,6 +143,7 @@ margin_left = -76.0
 margin_top = -158.0
 margin_right = 72.0
 margin_bottom = -132.0
+custom_fonts/font = SubResource( 3 )
 text = "Max Time Travel Fuel"
 align = 1
 valign = 1
@@ -123,10 +153,11 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -23.0
-margin_top = -117.0
-margin_right = 17.0
-margin_bottom = -103.0
+margin_left = -19.0
+margin_top = -125.0
+margin_right = 21.0
+margin_bottom = -96.0
+custom_fonts/font = ExtResource( 3 )
 text = "10"
 align = 1
 valign = 1
@@ -141,6 +172,7 @@ margin_top = -122.0
 margin_right = 65.0
 margin_bottom = -102.0
 rect_min_size = Vector2( 20, 20 )
+custom_styles/normal = SubResource( 4 )
 text = ">"
 
 [node name="RemoveFuelBtn" type="Button" parent="OptionsMenu"]
@@ -153,6 +185,7 @@ margin_top = -122.0
 margin_right = -46.0
 margin_bottom = -102.0
 rect_min_size = Vector2( 20, 20 )
+custom_styles/normal = SubResource( 4 )
 text = "<"
 
 [node name="KingLabel" type="Label" parent="OptionsMenu"]
@@ -164,6 +197,7 @@ margin_left = -102.0
 margin_top = -66.0
 margin_right = 46.0
 margin_bottom = -40.0
+custom_fonts/font = SubResource( 3 )
 text = "King can time travel"
 align = 1
 valign = 1
@@ -184,10 +218,11 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -105.0
+margin_left = -146.0
 margin_top = -21.0
-margin_right = 48.0
+margin_right = 52.0
 margin_bottom = 5.0
+custom_fonts/font = SubResource( 3 )
 text = "Time Travel can Capture"
 align = 1
 valign = 1
@@ -218,6 +253,7 @@ grow_vertical = 2
 rect_min_size = Vector2( 150, 50 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
+theme = ExtResource( 6 )
 text = "Back to Menu"
 icon_align = 1
 
@@ -247,6 +283,7 @@ grow_vertical = 2
 rect_min_size = Vector2( 150, 50 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
+theme = ExtResource( 6 )
 text = "Play White"
 icon_align = 1
 
@@ -259,6 +296,7 @@ grow_vertical = 2
 rect_min_size = Vector2( 150, 50 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
+theme = ExtResource( 6 )
 text = "Play Black"
 icon_align = 1
 
@@ -271,6 +309,7 @@ grow_vertical = 2
 rect_min_size = Vector2( 150, 50 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
+theme = ExtResource( 6 )
 text = "Play Random"
 icon_align = 1
 

@@ -1,6 +1,13 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://UI/GameMenu.cs" type="Script" id=1]
+[ext_resource path="res://UI/BtnTheme.tres" type="Theme" id=2]
+[ext_resource path="res://UI/Dosis-Regular.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+size = 44
+use_filter = true
+font_data = ExtResource( 3 )
 
 [node name="GameMenu" type="Panel"]
 self_modulate = Color( 1, 1, 1, 0.819608 )
@@ -23,6 +30,7 @@ custom_constants/separation = 30
 margin_right = 154.0
 margin_bottom = 50.0
 rect_min_size = Vector2( 100, 50 )
+theme = ExtResource( 2 )
 text = "Resume"
 
 [node name="RestartButton" type="Button" parent="VBoxContainer"]
@@ -30,6 +38,7 @@ margin_top = 80.0
 margin_right = 154.0
 margin_bottom = 130.0
 rect_min_size = Vector2( 100, 50 )
+theme = ExtResource( 2 )
 text = "Restart"
 
 [node name="BackButton" type="Button" parent="VBoxContainer"]
@@ -37,17 +46,18 @@ margin_top = 160.0
 margin_right = 154.0
 margin_bottom = 210.0
 rect_min_size = Vector2( 100, 50 )
+theme = ExtResource( 2 )
 text = "Back To Menu"
 
 [node name="Label" type="Label" parent="."]
 visible = false
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -93.0
+margin_left = -270.0
 margin_top = 30.0
-margin_right = 2.0
-margin_bottom = 85.0
-rect_scale = Vector2( 2, 2 )
+margin_right = 270.0
+margin_bottom = 155.0
+custom_fonts/font = SubResource( 1 )
 align = 1
 valign = 1
 

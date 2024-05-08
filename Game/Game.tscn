@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Game/Board.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Game/Game.cs" type="Script" id=2]
 [ext_resource path="res://UI/GameMenu.tscn" type="PackedScene" id=3]
 [ext_resource path="res://UI/PanelTheme.tres" type="Theme" id=4]
+[ext_resource path="res://UI/DynamicFont.tres" type="DynamicFont" id=5]
+[ext_resource path="res://UI/BtnTheme.tres" type="Theme" id=6]
 
 [node name="Game" type="Control"]
 anchor_right = 1.0
@@ -30,7 +32,7 @@ margin_left = 150.0
 margin_top = 115.0
 margin_right = 247.0
 margin_bottom = 168.0
-rect_scale = Vector2( 1.3, 1.3 )
+custom_fonts/font = ExtResource( 5 )
 text = "Fuel: 10"
 align = 1
 valign = 1
@@ -40,7 +42,7 @@ margin_left = 150.0
 margin_top = 415.0
 margin_right = 247.0
 margin_bottom = 468.0
-rect_scale = Vector2( 1.3, 1.3 )
+custom_fonts/font = ExtResource( 5 )
 text = "Fuel: 10"
 align = 1
 valign = 1
@@ -51,14 +53,15 @@ lastMoveColour = Color( 0, 0.438965, 0.484375, 0.54902 )
 
 [node name="LinesLabels" type="VBoxContainer" parent="BoardControl"]
 margin_left = 280.0
-margin_top = 119.0
+margin_top = 111.0
 margin_right = 320.0
-margin_bottom = 501.0
-custom_constants/separation = 36
+margin_bottom = 493.0
+custom_constants/separation = 21
 
 [node name="8" type="Label" parent="BoardControl/LinesLabels"]
 margin_right = 40.0
-margin_bottom = 14.0
+margin_bottom = 29.0
+custom_fonts/font = ExtResource( 5 )
 text = "8"
 align = 1
 valign = 1
@@ -66,7 +69,8 @@ valign = 1
 [node name="7" type="Label" parent="BoardControl/LinesLabels"]
 margin_top = 50.0
 margin_right = 40.0
-margin_bottom = 64.0
+margin_bottom = 79.0
+custom_fonts/font = ExtResource( 5 )
 text = "7"
 align = 1
 valign = 1
@@ -74,7 +78,8 @@ valign = 1
 [node name="6" type="Label" parent="BoardControl/LinesLabels"]
 margin_top = 100.0
 margin_right = 40.0
-margin_bottom = 114.0
+margin_bottom = 129.0
+custom_fonts/font = ExtResource( 5 )
 text = "6"
 align = 1
 valign = 1
@@ -82,7 +87,8 @@ valign = 1
 [node name="5" type="Label" parent="BoardControl/LinesLabels"]
 margin_top = 150.0
 margin_right = 40.0
-margin_bottom = 164.0
+margin_bottom = 179.0
+custom_fonts/font = ExtResource( 5 )
 text = "5"
 align = 1
 valign = 1
@@ -90,7 +96,8 @@ valign = 1
 [node name="4" type="Label" parent="BoardControl/LinesLabels"]
 margin_top = 200.0
 margin_right = 40.0
-margin_bottom = 214.0
+margin_bottom = 229.0
+custom_fonts/font = ExtResource( 5 )
 text = "4"
 align = 1
 valign = 1
@@ -98,7 +105,8 @@ valign = 1
 [node name="3" type="Label" parent="BoardControl/LinesLabels"]
 margin_top = 250.0
 margin_right = 40.0
-margin_bottom = 264.0
+margin_bottom = 279.0
+custom_fonts/font = ExtResource( 5 )
 text = "3"
 align = 1
 valign = 1
@@ -106,7 +114,8 @@ valign = 1
 [node name="2" type="Label" parent="BoardControl/LinesLabels"]
 margin_top = 300.0
 margin_right = 40.0
-margin_bottom = 314.0
+margin_bottom = 329.0
+custom_fonts/font = ExtResource( 5 )
 text = "2"
 align = 1
 valign = 1
@@ -114,85 +123,94 @@ valign = 1
 [node name="1" type="Label" parent="BoardControl/LinesLabels"]
 margin_top = 350.0
 margin_right = 40.0
-margin_bottom = 364.0
+margin_bottom = 379.0
+custom_fonts/font = ExtResource( 5 )
 text = "1"
 align = 1
 valign = 1
 
 [node name="ColumnLabels" type="HBoxContainer" parent="BoardControl"]
-margin_left = 340.0
+margin_left = 339.0
 margin_top = 61.0
-margin_right = 719.0
+margin_right = 718.0
 margin_bottom = 101.0
-custom_constants/separation = 41
+custom_constants/separation = 38
 
 [node name="A" type="Label" parent="BoardControl/ColumnLabels"]
-margin_top = 13.0
-margin_right = 9.0
-margin_bottom = 27.0
+margin_top = 5.0
+margin_right = 12.0
+margin_bottom = 34.0
+custom_fonts/font = ExtResource( 5 )
 text = "A"
 align = 1
 valign = 1
 
 [node name="B" type="Label" parent="BoardControl/ColumnLabels"]
 margin_left = 50.0
-margin_top = 13.0
-margin_right = 59.0
-margin_bottom = 27.0
+margin_top = 5.0
+margin_right = 62.0
+margin_bottom = 34.0
+custom_fonts/font = ExtResource( 5 )
 text = "B"
 align = 1
 valign = 1
 
 [node name="C" type="Label" parent="BoardControl/ColumnLabels"]
 margin_left = 100.0
-margin_top = 13.0
-margin_right = 108.0
-margin_bottom = 27.0
+margin_top = 5.0
+margin_right = 112.0
+margin_bottom = 34.0
+custom_fonts/font = ExtResource( 5 )
 text = "C"
 align = 1
 valign = 1
 
 [node name="D" type="Label" parent="BoardControl/ColumnLabels"]
-margin_left = 149.0
-margin_top = 13.0
-margin_right = 159.0
-margin_bottom = 27.0
+margin_left = 150.0
+margin_top = 5.0
+margin_right = 162.0
+margin_bottom = 34.0
+custom_fonts/font = ExtResource( 5 )
 text = "D"
 align = 1
 valign = 1
 
 [node name="E" type="Label" parent="BoardControl/ColumnLabels"]
 margin_left = 200.0
-margin_top = 13.0
-margin_right = 207.0
-margin_bottom = 27.0
+margin_top = 5.0
+margin_right = 211.0
+margin_bottom = 34.0
+custom_fonts/font = ExtResource( 5 )
 text = "E"
 align = 1
 valign = 1
 
 [node name="F" type="Label" parent="BoardControl/ColumnLabels"]
-margin_left = 248.0
-margin_top = 13.0
-margin_right = 255.0
-margin_bottom = 27.0
+margin_left = 249.0
+margin_top = 5.0
+margin_right = 260.0
+margin_bottom = 34.0
+custom_fonts/font = ExtResource( 5 )
 text = "F"
 align = 1
 valign = 1
 
 [node name="G" type="Label" parent="BoardControl/ColumnLabels"]
-margin_left = 296.0
-margin_top = 13.0
-margin_right = 306.0
-margin_bottom = 27.0
+margin_left = 298.0
+margin_top = 5.0
+margin_right = 310.0
+margin_bottom = 34.0
+custom_fonts/font = ExtResource( 5 )
 text = "G"
 align = 1
 valign = 1
 
 [node name="H" type="Label" parent="BoardControl/ColumnLabels"]
-margin_left = 347.0
-margin_top = 13.0
-margin_right = 357.0
-margin_bottom = 27.0
+margin_left = 348.0
+margin_top = 5.0
+margin_right = 361.0
+margin_bottom = 34.0
+custom_fonts/font = ExtResource( 5 )
 text = "H"
 align = 1
 valign = 1
@@ -204,6 +222,7 @@ margin_left = -89.0
 margin_top = 18.0
 margin_right = -16.0
 margin_bottom = 71.0
+theme = ExtResource( 6 )
 text = "Menu"
 
 [node name="GameMenu" parent="." instance=ExtResource( 3 )]
