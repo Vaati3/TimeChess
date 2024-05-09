@@ -83,6 +83,7 @@ public class Board : Node2D
         EmitSignal(nameof(TimeTravel), timeFuel, Colour.White);
         lastMove[0].Visible = false;
         lastMove[1].Visible = false;
+        controlPreviews.Visible = false;
     }
 
     public void ResetPieces()
