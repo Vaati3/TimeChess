@@ -40,14 +40,13 @@ public class Game : Control
 
     public void _on_Board_MoveOver(string notation)
     {
-        int turn = board.turn - 1;
-        if (turn % 2 != 0)
+        if (board.turn % 2 == 0)
         {
             if (moveList.GetChildCount() >= 20)
                 moveList.GetChild(0).QueueFree();
             lastMove = new Label
             {
-                Text = turn/2 + "|  " + notation
+                Text = board.turn/2 + "|  " + notation
             };
             moveList.AddChild(lastMove);
         } else {
@@ -63,9 +62,9 @@ public class Game : Control
     public void _on_Board_TimeTravel(int[] timeFuel, Colour colour)
     {
         if (colour == Colour.Black)
-            GetNode<Label>("BoardControl/BlackFuel").Text = "Fuel: " + timeFuel[(int)colour].ToString();
+            GetNode<Label>("BoardControl/BlackFuel").Text = "Time Fuel: " + timeFuel[(int)colour].ToString();
         else
-            GetNode<Label>("BoardControl/WhiteFuel").Text = "Fuel: " + timeFuel[(int)colour].ToString();
+            GetNode<Label>("BoardControl/WhiteFuel").Text = "Time Fuel: " + timeFuel[(int)colour].ToString();
     }
 
     public void _on_MenuButton_pressed()

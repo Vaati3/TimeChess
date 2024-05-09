@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
+//called AI but no intelligence is present here
 public class AI : Node
 {
     RandomNumberGenerator rng;

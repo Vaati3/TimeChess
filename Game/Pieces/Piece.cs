@@ -233,12 +233,12 @@ public abstract class Piece : Control
         return limitedMoves;
     }
 
-    public void Selected()
+    public bool Selected()
     {
         if (board.settings.playAI && board.settings.AIColour == colour)
-            return;
+            return false;
         if (!IsTurn() || this != board.pieces[pos.x, pos.y])
-            return;
+            return false;
         if (!kingIsCheck && GetType() != typeof(King))
         {
             board.pieces[pos.x, pos.y] = null;
@@ -255,17 +255,17 @@ public abstract class Piece : Control
             board.sfxManager.Play(0);
             TogglePreviews();
         }
+        return true;
     }
 
     public override object GetDragData(Vector2 position)
     {
-        if (IsTurn())
+        if (Selected())
         {
             TextureRect preview = new TextureRect(){
                 Texture = GetNode<Sprite>("Sprite").Texture
             };
             isDragging = true;
-            Selected();
             SetDragPreview(preview);
             return this;
         }
@@ -313,7 +313,8 @@ public abstract class Piece : Control
             if (what == NotificationDragEnd && !GetViewport().GuiIsDragSuccessful())
             {
                 isDragging = false;
-                TogglePreviews();
+                if (isPreviewing)
+                    TogglePreviews();
             }
         }
         base._Notification(what);
