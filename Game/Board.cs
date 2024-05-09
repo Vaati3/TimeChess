@@ -263,7 +263,6 @@ public class Board : Node2D
             {
                 if (pieces[x, y] != null)
                 {
-                    pieces[x, y].needsUpdate = true;
                     if (pieces[x, y].colour == colour && pieces[x, y].GetType() != typeof(King))
                         pieces[x, y].kingIsCheck = kingIsCheck;
                     else

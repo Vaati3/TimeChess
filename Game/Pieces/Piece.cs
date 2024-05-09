@@ -53,12 +53,9 @@ public abstract class Piece : Control
     public Vector2i pos { get; private set;}
     public int value {get; protected set;}
     public List<Move> previousMoves { get; set;}
-    public bool needsUpdate { get; set;}
     public bool isDragging { get; set;}
     public bool kingIsCheck { get; set;}
     bool isPreviewing;
-    List<MovePreview> previews;
-
     public virtual void Init(Board board, Colour colour, int x, int y)
     {
         this.board = board;
@@ -68,7 +65,6 @@ public abstract class Piece : Control
 
         isPreviewing = false;
         isDragging = false;
-        needsUpdate = true;
         kingIsCheck = false;
         previousMoves = new List<Move>();
     }
@@ -153,17 +149,17 @@ public abstract class Piece : Control
         MovePiece(move);
         board.kings[(int)colour].UnCheck();
         if (!noPreview)
-            TogglePreviews();
+            TogglePreviews(false);
         board.NextTurn(move, colour);
     }
 
     protected void CreatePreviews()
     {
-        foreach(MovePreview preview in previews)
+        
+        foreach(MovePreview preview in board.controlPreviews.GetChildren())
         {
             preview.QueueFree();
         }
-        previews.Clear();
         List<Move> moves = kingIsCheck ? DefendKing() : GetPosibleMoves();
         PackedScene scene = GD.Load<PackedScene>("res://Game/MovePreview.tscn");
 
@@ -176,23 +172,15 @@ public abstract class Piece : Control
             MovePreview preview = scene.Instance<MovePreview>();
             preview.Init(move, board.tileSize);
             board.controlPreviews.AddChild(preview);
-            previews.Add(preview);
         }
     }
 
-    protected void TogglePreviews()
+    protected void TogglePreviews(bool state)
     {
-        if (needsUpdate)
-        {
-            previews = new List<MovePreview>();
+        if (state)
             CreatePreviews();
-            needsUpdate = false;
-        }
-        isPreviewing = !isPreviewing;
-        foreach(MovePreview preview in previews)
-        {
-            preview.Visible = !preview.Visible;
-        }       
+        isPreviewing = state;
+        board.controlPreviews.Visible = state; 
     }
 
     protected bool IsTurn()
@@ -253,7 +241,7 @@ public abstract class Piece : Control
         if (!isPreviewing)
         {
             board.sfxManager.Play(0);
-            TogglePreviews();
+            TogglePreviews(true);
         }
         return true;
     }
@@ -283,7 +271,7 @@ public abstract class Piece : Control
                 if (mouse.Pressed)
                     return;
                 bool clickOut = true;
-                foreach (MovePreview preview in previews)
+                foreach (MovePreview preview in board.controlPreviews.GetChildren())
                 {
                     if (preview.CheckMouse(mouse.Position, board.Scale))
                     {
@@ -292,7 +280,7 @@ public abstract class Piece : Control
                     }
                 }
                 if (clickOut)
-                    TogglePreviews();
+                    TogglePreviews(false);
             }
         } else if (@event is InputEventMouseButton mouse)
         {
@@ -314,7 +302,7 @@ public abstract class Piece : Control
             {
                 isDragging = false;
                 if (isPreviewing)
-                    TogglePreviews();
+                    TogglePreviews(false);
             }
         }
         base._Notification(what);

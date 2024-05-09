@@ -25,7 +25,7 @@ public class Pawn : Piece
             MovePiece(move);
             board.kings[(int)colour].UnCheck();
             if (!noPreview)
-                TogglePreviews();
+                TogglePreviews(false);
             board.PromotePawn(this, move);
         }
         else{

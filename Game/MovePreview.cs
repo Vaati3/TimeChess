@@ -19,7 +19,6 @@ public class MovePreview : Control
         this.tileSize = tileSize;
 
         RectPosition = move.pos * tileSize;
-        Visible = false;
         if (move.isCastling)
             GetNode<ColorRect>("ColorRect").Color = yellow;
         else if (move.timeTravelCost > 0)

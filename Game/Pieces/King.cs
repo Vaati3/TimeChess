@@ -83,7 +83,7 @@ public class King : Piece
         int x = move.pos.x == 2 ? 3 : 5;
         move.target.MovePiece(new Move(move.target, x, move.pos.y, false));
         if (!noPreview)
-            TogglePreviews();
+            TogglePreviews(false);
         board.NextTurn(move, colour);
     }
 
