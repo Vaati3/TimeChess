@@ -7,13 +7,13 @@ public class Rook : Piece
     public override void Init(Board board, Colour colour, int x, int y)
     {
         value = 5;
-        base.Init(board, colour, x, y);
         if (colour == Colour.Black)
         {
             GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://Game/Pieces/Sprites/BlackRook.png");
         } else {
             GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://Game/Pieces/Sprites/WhiteRook.png");
         }
+        base.Init(board, colour, x, y);
     }
 
 //missing castling with king

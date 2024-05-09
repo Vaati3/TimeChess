@@ -7,13 +7,13 @@ public class Pawn : Piece
     public override void Init(Board board, Colour colour, int x, int y)
     {
         value = 1;
-        base.Init(board, colour, x, y);
         if (colour == Colour.Black)
         {
             GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://Game/Pieces/Sprites/BlackPawn.png");
         } else {
             GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://Game/Pieces/Sprites/WhitePawn.png");
         }
+        base.Init(board, colour, x, y);
     }
 
     public override void PerformMove(Move move, bool noPreview = false)

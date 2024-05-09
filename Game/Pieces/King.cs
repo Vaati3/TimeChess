@@ -9,20 +9,23 @@ public class King : Piece
     public override void Init(Board board, Colour colour, int x, int y)
     {
         value = -1;
-        base.Init(board, colour, x, y);
-        attacker = null;
-        checkSignal = new ColorRect();
-        checkSignal.RectSize = new Vector2(50, 50);
-        checkSignal.Color = Godot.Colors.OrangeRed;
-        checkSignal.Visible = false;
-        AddChild(checkSignal);
-        MoveChild(checkSignal, 0);
         if (colour == Colour.Black)
         {
             GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://Game/Pieces/Sprites/BlackKing.png");
         } else {
             GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://Game/Pieces/Sprites/WhiteKing.png");
         }
+        base.Init(board, colour, x, y);
+        attacker = null;
+        checkSignal = new ColorRect
+        {
+            RectSize = new Vector2(50, 50),
+            Color = Colors.OrangeRed,
+            Visible = false,
+            MouseFilter = MouseFilterEnum.Ignore
+        };
+        AddChild(checkSignal);
+        MoveChild(checkSignal, 0);
     }
 
     public void UnCheck()

@@ -46,6 +46,8 @@ public class Board : Node2D
     [Export]
     public Color lastMoveColour;
     ColorRect[] lastMove;
+    Control controlPieces;
+    public Control controlPreviews { get; private set;}
 
     public void InstanciatePiece(PackedScene scene, string type, Colour colour, int x, int y)
     {
@@ -54,7 +56,7 @@ public class Board : Node2D
         inst.SetScript(GD.Load<Script>("res://Game/Pieces/" + type + ".cs")); //SetProcess(true); to activate process after SetScript
         pieces[x,y] = (Piece)GD.InstanceFromId(id);
         pieces[x,y].Init(this, colour, x, y);
-        AddChild(pieces[x,y]);
+        controlPieces.AddChild(pieces[x,y]);
         
         if (type == "King")
             kings[(int)colour] = (King)pieces[x,y];
@@ -327,12 +329,15 @@ public class Board : Node2D
             Color = lastMoveColour
         };
 
-        AddChild(lastMove[0]);
-        AddChild(lastMove[1]);
+        Control boardControl = GetNode<Control>("BoardControl");
+        boardControl.AddChild(lastMove[0]);
+        boardControl.AddChild(lastMove[1]);
     }
 
     public override void _Ready()
     {
+        controlPieces = GetNode<Control>("Pieces");
+        controlPreviews = GetNode<Control>("Previews");
         tileSize = 50;
         pieces = new Piece[8,8];
         kings = new King[2];

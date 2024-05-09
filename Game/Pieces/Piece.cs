@@ -46,26 +46,28 @@ public struct Move{
     }
 }
 
-public abstract class Piece : Node2D
+public abstract class Piece : Control
 {
+    protected Board board { get; private set;}
     public Colour colour { get; private set;}
     public Vector2i pos { get; private set;}
     public int value {get; protected set;}
     public List<Move> previousMoves { get; set;}
-    protected Board board { get; private set;}
-    protected bool isPreviewing { get; private set;}
     public bool needsUpdate { get; set;}
-    protected List<MovePreview> previews { get; private set;}
+    public bool isDragging { get; set;}
     public bool kingIsCheck { get; set;}
+    bool isPreviewing;
+    List<MovePreview> previews;
 
     public virtual void Init(Board board, Colour colour, int x, int y)
     {
         this.board = board;
         this.colour = colour;
         pos = new Vector2i(x, y);
-        Position = pos * board.tileSize;
+        RectPosition = pos * board.tileSize;
 
         isPreviewing = false;
+        isDragging = false;
         needsUpdate = true;
         kingIsCheck = false;
         previousMoves = new List<Move>();
@@ -129,7 +131,7 @@ public abstract class Piece : Node2D
     {
         board.pieces[pos.x, pos.y] = null;
         pos = move.pos;
-        Position = pos * board.tileSize;
+        RectPosition = pos * board.tileSize;
         if (move.target != null)
         {
             board.pieces[move.target.pos.x, move.target.pos.y] = null;
@@ -173,7 +175,7 @@ public abstract class Piece : Node2D
                 continue;
             MovePreview preview = scene.Instance<MovePreview>();
             preview.Init(move, board.tileSize);
-            AddChild(preview);
+            board.controlPreviews.AddChild(preview);
             previews.Add(preview);
         }
     }
@@ -231,7 +233,7 @@ public abstract class Piece : Node2D
         return limitedMoves;
     }
 
-    public void _on_Button_pressed()
+    public void Selected()
     {
         if (board.settings.playAI && board.settings.AIColour == colour)
             return;
@@ -255,8 +257,25 @@ public abstract class Piece : Node2D
         }
     }
 
+    public override object GetDragData(Vector2 position)
+    {
+        if (IsTurn())
+        {
+            TextureRect preview = new TextureRect(){
+                Texture = GetNode<Sprite>("Sprite").Texture
+            };
+            isDragging = true;
+            Selected();
+            SetDragPreview(preview);
+            return this;
+        }
+        return null;
+    }
+
     public override void _Input(InputEvent @event)
     {
+        if (isDragging)
+            return;
         if (isPreviewing)
         {
             if (@event is InputEventMouseButton mouse)
@@ -275,6 +294,28 @@ public abstract class Piece : Node2D
                 if (clickOut)
                     TogglePreviews();
             }
+        } else if (@event is InputEventMouseButton mouse)
+        {
+            if (mouse.Pressed)
+                return;
+            if (mouse.Position.x >= RectGlobalPosition.x && mouse.Position.x <= RectGlobalPosition.x + board.tileSize * board.Scale.x && 
+                mouse.Position.y >= RectGlobalPosition.y && mouse.Position.y <= RectGlobalPosition.y + board.tileSize * board.Scale.y)
+            {
+                Selected();
+            }
         }
+    }
+
+    public override void _Notification(int what)
+    {
+        if (isDragging)
+        {
+            if (what == NotificationDragEnd && !GetViewport().GuiIsDragSuccessful())
+            {
+                isDragging = false;
+                TogglePreviews();
+            }
+        }
+        base._Notification(what);
     }
 }
