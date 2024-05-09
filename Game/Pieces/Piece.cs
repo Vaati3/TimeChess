@@ -248,7 +248,7 @@ public abstract class Piece : Control
 
     public override object GetDragData(Vector2 position)
     {
-        if (Selected())
+        if (!board.isPaused && Selected())
         {
             TextureRect preview = new TextureRect(){
                 Texture = GetNode<Sprite>("Sprite").Texture
@@ -262,7 +262,7 @@ public abstract class Piece : Control
 
     public override void _Input(InputEvent @event)
     {
-        if (isDragging)
+        if (isDragging || board.isPaused)
             return;
         if (isPreviewing)
         {

@@ -11,6 +11,8 @@ public class GameMenu : Panel
 
     [Signal]
     public delegate void RestartGame();
+    [Signal]
+    public delegate void ResumeGame();
 
     public override void _Ready()
     {
@@ -32,6 +34,7 @@ public class GameMenu : Panel
     {
         sfxManager.Play(2);
         Visible = false;
+        EmitSignal(nameof(ResumeGame));
     }
 
     public void _on_RestartButton_pressed()

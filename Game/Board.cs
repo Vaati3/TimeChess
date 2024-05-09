@@ -48,6 +48,7 @@ public class Board : Node2D
     ColorRect[] lastMove;
     Control controlPieces;
     public Control controlPreviews { get; private set;}
+    public bool isPaused {get; set;}
 
     public void InstanciatePiece(PackedScene scene, string type, Colour colour, int x, int y)
     {
@@ -77,6 +78,7 @@ public class Board : Node2D
 
         }
         turn = 1;
+        isPaused = false;
         timeFuel[0] = settings.maxFuel;
         timeFuel[1] = settings.maxFuel;
         EmitSignal(nameof(TimeTravel), timeFuel, Colour.Black);

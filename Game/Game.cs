@@ -69,6 +69,7 @@ public class Game : Control
 
     public void _on_MenuButton_pressed()
     {
+        board.isPaused = true;
         startMenu.sfxManager.Play(2);
         menu.Visible = true;
     }
@@ -84,5 +85,10 @@ public class Game : Control
         board.sfxManager.Play(2);
         board.ResetPieces();
         ClearMoveList();
+    }
+
+    public void _on_GameMenu_ResumeGame()
+    {
+        board.isPaused = false;
     }
 }
