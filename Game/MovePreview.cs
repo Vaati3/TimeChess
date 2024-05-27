@@ -52,7 +52,11 @@ public class MovePreview : Control
 
     public override void DropData(Vector2 position, object data)
     {
-        move.piece.isDragging = false;
+        if (move.piece.isDragging)
+        {
+            move.piece.isDragging = false;
+            move.piece.Visible = true;
+        }
         if (move.isCastling)
             ((King)move.piece).PerformCastling(move);
         else

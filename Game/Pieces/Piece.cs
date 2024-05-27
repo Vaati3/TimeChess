@@ -254,6 +254,7 @@ public abstract class Piece : Control
                 Texture = GetNode<Sprite>("Sprite").Texture
             };
             isDragging = true;
+            Visible = false;
             SetDragPreview(preview);
             return this;
         }
@@ -301,6 +302,7 @@ public abstract class Piece : Control
             if (what == NotificationDragEnd && !GetViewport().GuiIsDragSuccessful())
             {
                 isDragging = false;
+                Visible = true;
                 if (isPreviewing)
                     TogglePreviews(false);
             }
