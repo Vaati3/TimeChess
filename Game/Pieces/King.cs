@@ -8,7 +8,7 @@ public class King : Piece
     private ColorRect checkSignal;
     public override void Init(Board board, Colour colour, int x, int y)
     {
-        value = -1;
+        value = 900;
         if (colour == Colour.Black)
         {
             GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://Game/Pieces/Sprites/BlackKing.png");
@@ -114,14 +114,14 @@ public class King : Piece
             if(move.canCapture && move.pos == newPos)
                 return true;
         }
-        return CheckMove(moves, x, y);
+        return CheckMove(moves, x, y, false);
     }
 
-    public override List<Move> GetPosibleMoves()
+    public override List<Move> GetPosibleMoves(bool ai = false)
     {
         List<Move> moves;
 
-        if (IsTurn())
+        if (!ai && IsTurn())
         {
             board.pieces[pos.x, pos.y] = null;
             Colour otherColour = colour == Colour.Black ? Colour.White : Colour.Black;
@@ -134,14 +134,14 @@ public class King : Piece
                 TimeTravel(moves, danger);
         } else {
             moves = new List<Move>();
-            CheckMove(moves, pos.x + 1, pos.y);
-            CheckMove(moves, pos.x - 1, pos.y);
-            CheckMove(moves, pos.x, pos.y - 1);
-            CheckMove(moves, pos.x, pos.y + 1);
-            CheckMove(moves, pos.x + 1, pos.y + 1);
-            CheckMove(moves, pos.x - 1, pos.y + 1);
-            CheckMove(moves, pos.x + 1, pos.y - 1);
-            CheckMove(moves, pos.x - 1, pos.y - 1);
+            CheckMove(moves, pos.x + 1, pos.y, ai);
+            CheckMove(moves, pos.x - 1, pos.y, ai);
+            CheckMove(moves, pos.x, pos.y - 1, ai);
+            CheckMove(moves, pos.x, pos.y + 1, ai);
+            CheckMove(moves, pos.x + 1, pos.y + 1, ai);
+            CheckMove(moves, pos.x - 1, pos.y + 1, ai);
+            CheckMove(moves, pos.x + 1, pos.y - 1, ai);
+            CheckMove(moves, pos.x - 1, pos.y - 1, ai);
         }
         
         return moves;

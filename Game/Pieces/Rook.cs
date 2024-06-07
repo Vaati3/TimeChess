@@ -17,7 +17,7 @@ public class Rook : Piece
     }
 
 //missing castling with king
-    public override List<Move> GetPosibleMoves()
+    public override List<Move> GetPosibleMoves(bool ai = false)
     {
         List<Move> moves = new List<Move>();
         bool right, left, top, down;
@@ -26,13 +26,13 @@ public class Rook : Piece
         for(int i = 1; i < 8; i++)
         {
             if (!right)
-                right = CheckMove(moves, pos.x + i, pos.y);
+                right = CheckMove(moves, pos.x + i, pos.y, ai);
             if (!left)
-                left = CheckMove(moves, pos.x - i, pos.y);
+                left = CheckMove(moves, pos.x - i, pos.y, ai);
             if (!top)
-                top = CheckMove(moves, pos.x, pos.y - i);
+                top = CheckMove(moves, pos.x, pos.y - i, ai);
             if (!down)
-                down = CheckMove(moves, pos.x, pos.y + i);
+                down = CheckMove(moves, pos.x, pos.y + i, ai);
             if (top && right && left && down)
                 break;
         }

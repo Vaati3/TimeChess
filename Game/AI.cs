@@ -2,14 +2,29 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
+struct AIMove {
+    public Move? move;
+    public int value;
+
+    public AIMove(Move? move, int value)
+    {
+        this.move = move;
+        this.value = value;
+    }
+}
+
 //called AI but no intelligence is present here
 public class AI : Node
 {
     RandomNumberGenerator rng;
     Timer timer;
     Board board;
-    bool isChecked = false;
     public Colour colour {get; set;}
+
+    public AI()
+    {
+
+    }
     public AI(Board board)
     {
         this.board = board;
@@ -22,77 +37,88 @@ public class AI : Node
         board.Connect("AITurn", this, "_on_AI_turn");
     }
 
-    private List<Move>GetPossibleMoves()
+    private Move? GetRandomMove(List<Move> moves)
     {
-        List<Move> moves = board.GetAllPiecesMoves(colour, isChecked);
-        List<Move> possibleMoves = new List<Move>();
-
-        for (int i = 0; i < moves.Count; i++)
-        {
-            if (moves[i].noPreview)
-                continue;
-            if (moves[i].piece.GetType() == typeof(Pawn) && moves[i].canCapture && moves[i].target == null)
-                continue;
-            if (!moves[i].piece.kingIsCheck && moves[i].piece.GetType() != typeof(King))
-            {
-                board.pieces[moves[i].piece.pos.x, moves[i].piece.pos.y] = null;
-                bool isCheck = board.kings[(int)colour].IsCheck();
-                board.pieces[moves[i].piece.pos.x, moves[i].piece.pos.y] = moves[i].piece;
-                    if (isCheck)
-                    {
-                        board.kings[(int)colour].UnCheck();
-                        Vector2i pos = moves[i].piece.pos;
-                        while (moves[i].piece.pos == pos)
-                            i++;
-                        continue;
-                    }
-            }
-            possibleMoves.Add(moves[i]);
-        }
-
-        return possibleMoves;
-    }
-
-    private List<Move> Agressivity(List<Move> moves)
-    {
-        int bestValue = -1;
-
-        foreach(Move move in moves)
-        {
-            if (move.target != null)
-                bestValue = Math.Max(bestValue, move.target.value);
-        }
-        if (bestValue < 0)
-            return moves;
-
-        List<Move> attacks = new List<Move>();
-        foreach(Move move in moves)
-        {
-            if (move.target != null)
-            {
-                if (move.target.value == bestValue)
-                    attacks.Add(move);
-            }
-        }
-        return attacks;
-    }
-
-    private void PlayMove()
-    {
-        List<Move> moves = Agressivity(GetPossibleMoves());
-
         if (moves.Count == 0)
-            return;
+            return null;
         int index = rng.RandiRange(0, moves.Count-1);
-        if (moves[index].isCastling)
-            ((King)moves[index].piece).PerformCastling(moves[index], true);
-        else
-            moves[index].piece.PerformMove(moves[index], true);
+        return moves[index];
     }
 
-    public void _on_AI_turn(bool isChecked)
+    private AIMove MoveAndMinMax(Move move, int depth, Colour colour, Colour otherColour)
     {
-        this.isChecked = isChecked;
-        timer.Start(0.75f);
+        Piece savePieces = board.pieces[move.pos.x, move.pos.y];
+        int boardvalue = board.boardValues[(int)otherColour];
+        board.pieces[move.piece.pos.x, move.piece.pos.y] = null;
+        board.pieces[move.pos.x, move.pos.y] = move.piece;
+        if (savePieces != null)
+            board.boardValues[(int)otherColour] -= savePieces.value;
+        AIMove current = MinMax(depth, otherColour);
+        board.pieces[move.piece.pos.x, move.piece.pos.y] = move.piece;
+        board.pieces[move.pos.x, move.pos.y] = savePieces;
+        if (savePieces != null)
+            board.boardValues[(int)otherColour] = boardvalue;
+        return current;
+    }
+
+    private AIMove MinMax(int depth, Colour colour)
+    {
+        if (depth == 0 || board.checkmate)
+            return new AIMove(null, GetBoardValue());
+        Colour otherColour = colour == Colour.White ? Colour.Black : Colour.White; 
+        List<Move> moves = board.GetAllPiecesMoves(colour, false, true);
+        Move? bestMove = GetRandomMove(moves);
+
+        if (colour == this.colour)
+        {
+            int max = -3000;
+            foreach (Move move in moves)
+            {
+                AIMove current = MoveAndMinMax(move, depth-1, colour, otherColour);
+                if (current.value > max)
+                {
+                    max = current.value;
+                    bestMove = move;
+                }
+            }
+            return new AIMove(bestMove, max);
+        } else {
+            int min = 3000;
+            foreach (Move move in moves)
+            {
+                AIMove current = MoveAndMinMax(move, depth-1, colour, otherColour);
+                if (current.value < min)
+                {
+                    min = current.value;
+                    bestMove = move;
+                }
+            }
+            return new AIMove(bestMove, min);
+        }
+    }
+
+    private int GetBoardValue()
+    {
+        if (colour == Colour.White)
+            return board.boardValues[1] - board.boardValues[0];
+        return board.boardValues[0] - board.boardValues[1];
+    }
+
+   private void PlayMove()
+    {
+        AIMove aiMove = MinMax(2, colour);
+
+        if (aiMove.move == null)
+            return;
+        if (aiMove.move.Value.isCastling)
+            ((King)aiMove.move.Value.piece).PerformCastling(aiMove.move.Value, true);
+        else
+            aiMove.move.Value.piece.PerformMove(aiMove.move.Value, true);
+    }
+
+
+    public void _on_AI_turn(    )
+    {
+        timer.Start(0);
     }
 }

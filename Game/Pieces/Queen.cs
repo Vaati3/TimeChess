@@ -16,7 +16,7 @@ public class Queen : Piece
         base.Init(board, colour, x, y);
     }
 
-    public override List<Move> GetPosibleMoves()
+    public override List<Move> GetPosibleMoves(bool ai = false)
     {
         List<Move> moves = new List<Move>();
         bool right, left, top, down, topR, TopL, downR, downL;
@@ -25,21 +25,21 @@ public class Queen : Piece
         for(int i = 1; i < 8; i++)
         {
             if (!right)
-                right = CheckMove(moves, pos.x + i, pos.y);
+                right = CheckMove(moves, pos.x + i, pos.y, ai);
             if (!left)
-                left = CheckMove(moves, pos.x - i, pos.y);
+                left = CheckMove(moves, pos.x - i, pos.y, ai);
             if (!top)
-                top = CheckMove(moves, pos.x, pos.y - i);
+                top = CheckMove(moves, pos.x, pos.y - i, ai);
             if (!down)
-                down = CheckMove(moves, pos.x, pos.y + i);
+                down = CheckMove(moves, pos.x, pos.y + i, ai);
             if (!topR)
-                topR = CheckMove(moves, pos.x + i, pos.y + i);
+                topR = CheckMove(moves, pos.x + i, pos.y + i, ai);
             if (!TopL)
-                TopL = CheckMove(moves, pos.x - i, pos.y + i);
+                TopL = CheckMove(moves, pos.x - i, pos.y + i, ai);
             if (!downR)
-                downR = CheckMove(moves, pos.x + i, pos.y - i);
+                downR = CheckMove(moves, pos.x + i, pos.y - i, ai);
             if (!downL)
-                downL = CheckMove(moves, pos.x - i, pos.y - i);
+                downL = CheckMove(moves, pos.x - i, pos.y - i, ai);
             if (top && right && left && down && topR && TopL && downR && downL)
                 break;
         }

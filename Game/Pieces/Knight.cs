@@ -16,18 +16,18 @@ public class Knight : Piece
         base.Init(board, colour, x, y);
     }
 
-    public override List<Move> GetPosibleMoves()
+    public override List<Move> GetPosibleMoves(bool ai = false)
     {
         List<Move> moves = new List<Move>();
         
-        CheckMove(moves, pos.x - 2, pos.y - 1);
-        CheckMove(moves, pos.x - 1, pos.y - 2);
-        CheckMove(moves, pos.x + 2, pos.y - 1);
-        CheckMove(moves, pos.x + 1, pos.y - 2);
-        CheckMove(moves, pos.x - 2, pos.y + 1);
-        CheckMove(moves, pos.x - 1, pos.y + 2);
-        CheckMove(moves, pos.x + 2, pos.y + 1);
-        CheckMove(moves, pos.x + 1, pos.y + 2);
+        CheckMove(moves, pos.x - 2, pos.y - 1, ai);
+        CheckMove(moves, pos.x - 1, pos.y - 2, ai);
+        CheckMove(moves, pos.x + 2, pos.y - 1, ai);
+        CheckMove(moves, pos.x + 1, pos.y - 2, ai);
+        CheckMove(moves, pos.x - 2, pos.y + 1, ai);
+        CheckMove(moves, pos.x - 1, pos.y + 2, ai);
+        CheckMove(moves, pos.x + 2, pos.y + 1, ai);
+        CheckMove(moves, pos.x + 1, pos.y + 2, ai);
         
         TimeTravel(moves);
         return moves;

@@ -69,7 +69,7 @@ public abstract class Piece : Control
         previousMoves = new List<Move>();
     }
 
-    public abstract List<Move> GetPosibleMoves();
+    public abstract List<Move> GetPosibleMoves(bool ai = false);
 
     protected bool MoveAlreadyExist(Move previousMove, List<Move> moves)
     {
@@ -104,7 +104,7 @@ public abstract class Piece : Control
         }
     }
 
-    protected bool CheckMove(List<Move> moves, int x, int y, bool canCapture = true, bool onlyCapture = false)
+    protected bool CheckMove(List<Move> moves, int x, int y, bool ai, bool canCapture = true, bool onlyCapture = false)
     {
         if (x < 0 || x > 7 || y < 0 || y > 7)
             return true;
@@ -112,13 +112,13 @@ public abstract class Piece : Control
         {
             if (!onlyCapture)
                 moves.Add(new Move(this, x, y, canCapture));
-            else if(canCapture)
+            else if(!ai && canCapture)
                 moves.Add(new Move(this, x, y, canCapture, true));
             return false;
         }
         if (canCapture && board.pieces[x, y].colour != colour)
             moves.Add(new Move(this, x, y, true, false, board.pieces[x, y]));
-        if (board.pieces[x, y].colour == colour)
+        if (!ai && board.pieces[x, y].colour == colour)
             moves.Add(new Move(this, x, y, canCapture, true));
         return true;
     }
@@ -130,6 +130,7 @@ public abstract class Piece : Control
         RectPosition = pos * board.tileSize;
         if (move.target != null)
         {
+            board.boardValues[(int)move.target.colour] -= move.target.value;
             board.pieces[move.target.pos.x, move.target.pos.y] = null;
             move.target.QueueFree();
         }

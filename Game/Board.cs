@@ -50,6 +50,9 @@ public class Board : Node2D
     public Control controlPreviews { get; private set;}
     public bool isPaused {get; set;}
 
+    public int[] boardValues {get; private set;}
+    public bool checkmate {get; private set;}
+
     public void InstanciatePiece(PackedScene scene, string type, Colour colour, int x, int y)
     {
         Piece inst = scene.Instance<Piece>();
@@ -75,7 +78,6 @@ public class Board : Node2D
                     pieces[x,y] = null;
                 }
             }
-
         }
         turn = 1;
         isPaused = false;
@@ -85,7 +87,10 @@ public class Board : Node2D
         EmitSignal(nameof(TimeTravel), timeFuel, Colour.White);
         lastMove[0].Visible = false;
         lastMove[1].Visible = false;
+        boardValues[0] = 1290;
+        boardValues[1] = 1290;
         controlPreviews.Visible = false;
+        checkmate = false;
     }
 
     public void ResetPieces()
@@ -112,7 +117,7 @@ public class Board : Node2D
             InstanciatePiece(scene, type, Colour.White, x, 7);
         }
         if (settings.playAI && settings.AIColour == Colour.White)
-            EmitSignal(nameof(AITurn), false);
+            EmitSignal(nameof(AITurn));
     }
 
     public void MoveLastMove(Vector2i lastPos, Vector2i newPos)
@@ -226,7 +231,6 @@ public class Board : Node2D
         turn++;
         Colour nextTurnColour = colour == Colour.Black ? Colour.White : Colour.Black;
         bool kingIsCheck = kings[(int)nextTurnColour].IsCheck();
-        bool checkmate = false;
         UpdatePieces(nextTurnColour, kingIsCheck);
 
         if (kingIsCheck)
@@ -247,12 +251,12 @@ public class Board : Node2D
                 }
         }
         if (settings.playAI && settings.AIColour == nextTurnColour)
-            EmitSignal(nameof(AITurn), kingIsCheck);
+            EmitSignal(nameof(AITurn));
         EmitSignal(nameof(MoveOver), NotationFromMove(lastMove, kingIsCheck, checkmate));
     }
 
     [Signal]
-    public delegate void AITurn(bool isCheck);
+    public delegate void AITurn();
     [Signal]
     public delegate void MoveOver(string notation);
     [Signal]
@@ -277,10 +281,11 @@ public class Board : Node2D
 
     public void PromotePawn(Piece pawn, Move move)
     {
+        boardValues[(int)pawn.colour] += 8;
         InstanciatePiece(GD.Load<PackedScene>("res://Game/Pieces/Piece.tscn"), "Queen", pawn.colour, pawn.pos.x, pawn.pos.y);
         pieces[pawn.pos.x, pawn.pos.y].previousMoves = pawn.previousMoves;
-        pawn.QueueFree();
         NextTurn(move, pieces[pawn.pos.x, pawn.pos.y].colour);
+        pawn.QueueFree();
     }
 
 
@@ -296,7 +301,7 @@ public class Board : Node2D
         }
     }
 
-    public List<Move> GetAllPiecesMoves(Colour colour, bool defendKing = false)
+    public List<Move> GetAllPiecesMoves(Colour colour, bool defendKing = false,  bool ai = false)
     {
         List<Move> moves = new List<Move>();
         for (int y = 0; y < 8; y++)
@@ -308,7 +313,7 @@ public class Board : Node2D
                     if (defendKing && pieces[x, y].GetType() != typeof(King))
                         moves.AddRange(pieces[x, y].DefendKing());
                     else
-                        moves.AddRange(pieces[x, y].GetPosibleMoves());
+                        moves.AddRange(pieces[x, y].GetPosibleMoves(ai));
                 }
             }
         }
@@ -344,6 +349,7 @@ public class Board : Node2D
         pieces = new Piece[8,8];
         kings = new King[2];
         timeFuel = new int[2];
+        boardValues = new int[2];
         InitLastMove();
 
         sfxManager = GetNode<SFXManager>("/root/SFXManager");

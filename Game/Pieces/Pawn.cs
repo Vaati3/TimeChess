@@ -47,18 +47,18 @@ public class Pawn : Piece
         }
     }
 
-    public override List<Move> GetPosibleMoves()
+    public override List<Move> GetPosibleMoves(bool ai = false)
     {
         List<Move> moves = new List<Move>();
         int dir = colour == Colour.Black ? 1 : -1;
         int start = colour == Colour.Black ? 1 : 6;
 
-        bool blocked = CheckMove(moves, pos.x, pos.y+dir, false);
+        bool blocked = CheckMove(moves, pos.x, pos.y+dir, ai, false);
         if (pos.y == start && !blocked)
-            CheckMove(moves, pos.x, pos.y+dir*2, false);
+            CheckMove(moves, pos.x, pos.y+dir*2, ai, false);
 
-        CheckMove(moves, pos.x+1, pos.y+dir, true, true);
-        CheckMove(moves, pos.x-1, pos.y+dir, true, true);
+        CheckMove(moves, pos.x+1, pos.y+dir, ai, true, true);
+        CheckMove(moves, pos.x-1, pos.y+dir, ai, true, true);
         
         if ((colour == Colour.Black && pos.y == 4) || (colour == Colour.White && pos.y == 3))
         {
