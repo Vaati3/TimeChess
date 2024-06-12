@@ -37,61 +37,66 @@ public class AI : Node
         board.Connect("AITurn", this, "_on_AI_turn");
     }
 
-    private Move? GetRandomMove(List<Move> moves)
+    private Move GetRandomMove(List<Move> moves)
     {
         if (moves.Count == 0)
-            return null;
+            return new Move();
         int index = rng.RandiRange(0, moves.Count-1);
         return moves[index];
     }
 
-    private AIMove MoveAndMinMax(Move move, int depth, Colour colour, Colour otherColour)
+    private AIMove MoveAndMinMax(Move move, int depth, Colour colour, int alpha, int beta)
     {
-        Piece savePieces = board.pieces[move.pos.x, move.pos.y];
-        int boardvalue = board.boardValues[(int)otherColour];
+        Colour otherColour = colour == Colour.White ? Colour.Black : Colour.White; 
         board.pieces[move.piece.pos.x, move.piece.pos.y] = null;
         board.pieces[move.pos.x, move.pos.y] = move.piece;
-        if (savePieces != null)
-            board.boardValues[(int)otherColour] -= savePieces.value;
-        AIMove current = MinMax(depth, otherColour);
+        if (move.target != null)
+            board.boardValues[(int)otherColour] -= move.target.value;
+        AIMove current = MinMax(depth, otherColour, alpha, beta);
         board.pieces[move.piece.pos.x, move.piece.pos.y] = move.piece;
-        board.pieces[move.pos.x, move.pos.y] = savePieces;
-        if (savePieces != null)
-            board.boardValues[(int)otherColour] = boardvalue;
+        board.pieces[move.pos.x, move.pos.y] = move.target;
+        if (move.target != null)
+            board.boardValues[(int)otherColour] += move.target.value;
         return current;
     }
 
-    private AIMove MinMax(int depth, Colour colour)
+    private AIMove MinMax(int depth, Colour colour, int alpha, int beta)
     {
         if (depth == 0 || board.checkmate)
             return new AIMove(null, GetBoardValue());
-        Colour otherColour = colour == Colour.White ? Colour.Black : Colour.White; 
         List<Move> moves = board.GetAllPiecesMoves(colour, false, true);
-        Move? bestMove = GetRandomMove(moves);
+        Move bestMove = GetRandomMove(moves);
+        moves.Remove(bestMove);
 
         if (colour == this.colour)
         {
-            int max = -3000;
+            int max = MoveAndMinMax(bestMove, depth-1, colour, alpha, beta).value;
             foreach (Move move in moves)
             {
-                AIMove current = MoveAndMinMax(move, depth-1, colour, otherColour);
+                AIMove current = MoveAndMinMax(move, depth-1, colour, alpha, beta);
                 if (current.value > max)
                 {
                     max = current.value;
                     bestMove = move;
                 }
+                alpha = Math.Max(alpha, current.value);
+                if (beta <= alpha)
+                    break;
             }
             return new AIMove(bestMove, max);
         } else {
-            int min = 3000;
+            int min = MoveAndMinMax(bestMove, depth-1, colour, alpha, beta).value;
             foreach (Move move in moves)
             {
-                AIMove current = MoveAndMinMax(move, depth-1, colour, otherColour);
+                AIMove current = MoveAndMinMax(move, depth-1, colour, alpha, beta);
                 if (current.value < min)
                 {
                     min = current.value;
                     bestMove = move;
                 }
+                beta = Math.Min(beta, current.value);
+                if (beta <= alpha)
+                    break;
             }
             return new AIMove(bestMove, min);
         }
@@ -106,14 +111,16 @@ public class AI : Node
 
    private void PlayMove()
     {
-        AIMove aiMove = MinMax(2, colour);
+        AIMove aiMove = MinMax(3, colour, -3000, 3000);
+        GD.Print(aiMove.value);
 
         if (aiMove.move == null)
             return;
+        Move move = aiMove.move.Value;
         if (aiMove.move.Value.isCastling)
-            ((King)aiMove.move.Value.piece).PerformCastling(aiMove.move.Value, true);
+            ((King)move.piece).PerformCastling(move, true);
         else
-            aiMove.move.Value.piece.PerformMove(aiMove.move.Value, true);
+            move.piece.PerformMove(move, true);
     }
 
 
