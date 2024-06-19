@@ -52,6 +52,19 @@ public class AI : Node
         board.pieces[move.pos.x, move.pos.y] = move.piece;
         if (move.target != null)
             board.boardValues[(int)otherColour] -= move.target.value;
+
+        if (colour == this.colour && move.piece is King king)
+        {
+            if (king.IsCheck())
+            {
+                board.pieces[move.piece.pos.x, move.piece.pos.y] = move.piece;
+                board.pieces[move.pos.x, move.pos.y] = move.target;
+                if (move.target != null)
+                    board.boardValues[(int)otherColour] += move.target.value;
+                return new AIMove(null, -3000);
+            }
+        }
+        
         AIMove current = MinMax(depth, otherColour, alpha, beta);
         board.pieces[move.piece.pos.x, move.piece.pos.y] = move.piece;
         board.pieces[move.pos.x, move.pos.y] = move.target;
@@ -111,8 +124,7 @@ public class AI : Node
 
    private void PlayMove()
     {
-        AIMove aiMove = MinMax(3, colour, -3000, 3000);
-        GD.Print(aiMove.value);
+        AIMove aiMove = MinMax(5, colour, -3000, 3000);
 
         if (aiMove.move == null)
             return;
