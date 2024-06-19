@@ -124,7 +124,7 @@ public class AI : Node
 
    private void PlayMove()
     {
-        AIMove aiMove = MinMax(5, colour, -3000, 3000);
+        AIMove aiMove = MinMax(4, colour, -3000, 3000);
 
         if (aiMove.move == null)
             return;
