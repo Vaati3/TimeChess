@@ -21,10 +21,8 @@ public class AI : Node
     Board board;
     public Colour colour {get; set;}
 
-    public AI()
-    {
-
-    }
+    public AI() { }
+    
     public AI(Board board)
     {
         this.board = board;
@@ -76,7 +74,10 @@ public class AI : Node
     private AIMove MinMax(int depth, Colour colour, int alpha, int beta)
     {
         if (depth == 0 || board.checkmate)
+        {
+            //if (board.checkmate)
             return new AIMove(null, GetBoardValue());
+        }
         List<Move> moves = board.GetAllPiecesMoves(colour, false, true);
         Move bestMove = GetRandomMove(moves);
         moves.Remove(bestMove);
@@ -135,8 +136,7 @@ public class AI : Node
             move.piece.PerformMove(move, true);
     }
 
-
-    public void _on_AI_turn(    )
+    public void _on_AI_turn()
     {
         timer.Start(0);
     }

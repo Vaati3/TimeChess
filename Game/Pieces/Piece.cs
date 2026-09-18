@@ -203,9 +203,9 @@ public abstract class Piece : Control
             if (move.noPreview)
                 continue;
             board.pieces[move.pos.x, move.pos.y] = this;
-            if (move.target != board.kings[(int)colour].attacker)
+            foreach (Piece attacker in board.kings[(int)colour].attackers)
             {
-                foreach (Move attack in board.kings[(int)colour].attacker.GetPosibleMoves())
+                foreach (Move attack in attacker.GetPosibleMoves())
                 {
                     if (attack.target != null && attack.target == board.kings[(int)colour])
                     {
@@ -214,7 +214,7 @@ public abstract class Piece : Control
                     }
                 }
             }
-            if (!stillCheck)
+            if (!stillCheck || (board.kings[(int)colour].attackers.Count == 1 && board.kings[(int)colour].attackers[0] == move.target))
                 limitedMoves.Add(move);
             board.pieces[move.pos.x, move.pos.y] = move.target;
         }

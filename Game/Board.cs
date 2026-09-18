@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 public struct Vector2i
@@ -203,8 +204,7 @@ public class Board : Node2D
         {
             if (move.pos.x == 2)
                 return "O-O-O";
-            else 
-                return "O-O";
+            return "O-O";
         }
         string notation = move.timeTravelCost > 0 ? "<" : "";
         if (move.piece.GetType() == typeof(Pawn))
@@ -235,20 +235,18 @@ public class Board : Node2D
 
         if (kingIsCheck)
         {
-            bool isCheckmate = true;
+            checkmate = true;
             foreach(Move move in GetAllPiecesMoves(nextTurnColour, true))
             {
                 if (!move.noPreview)
                 {
-                    isCheckmate = false;
+                    GD.Print(move.piece.GetType() + " " + move.piece.colour + " at " + move.piece.pos);
+                    checkmate = false;
                     break;
                 }
             }
-            if (isCheckmate)
-                {
-                    EmitSignal(nameof(Checkmate), colour);
-                    checkmate = true;
-                }
+            if (checkmate)
+                EmitSignal(nameof(Checkmate), colour);
         }
         if (settings.playAI && settings.AIColour == nextTurnColour)
             EmitSignal(nameof(AITurn));

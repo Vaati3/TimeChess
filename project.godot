@@ -23,6 +23,10 @@ SFXManager="*res://Sounds/SFXManager.cs"
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
 
+[global]
+
+dotnet=false
+
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class King : Piece
 {
-    public Piece attacker {get; set;}
+    public List<Piece> attackers {get; set;}
     private ColorRect checkSignal;
     public override void Init(Board board, Colour colour, int x, int y)
     {
@@ -16,7 +16,7 @@ public class King : Piece
             GetNode<Sprite>("Sprite").Texture = GD.Load<Texture>("res://Game/Pieces/Sprites/WhiteKing.png");
         }
         base.Init(board, colour, x, y);
-        attacker = null;
+        attackers = new List<Piece>();
         checkSignal = new ColorRect
         {
             RectSize = new Vector2(50, 50),
@@ -38,16 +38,16 @@ public class King : Piece
         Colour otherColour = colour == Colour.Black ? Colour.White : Colour.Black;
         List<Move> danger = board.GetAllPiecesMoves(otherColour);
         bool isCheck = false;
+        attackers.Clear();
     
-            foreach (Move move in danger)
+        foreach (Move move in danger)
+        {
+            if(move.canCapture && move.target == this)
             {
-                if(move.canCapture && move.target == this)
-                {
-                    isCheck = true;
-                    attacker = move.piece;
-                    break;
-                }
+                isCheck = true;
+                attackers.Add(move.piece);
             }
+        }
 
         checkSignal.Visible = isCheck;
         return isCheck;
