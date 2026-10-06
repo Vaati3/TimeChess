@@ -228,6 +228,13 @@ public class Board : Node2D
 
     public void NextTurn(Move lastMove, Colour colour)
     {
+        //check if king got taken to remediate checkmate not being detected
+        if (lastMove.target != null && lastMove.target.GetType() == typeof(King))
+        {
+            EmitSignal(nameof(Checkmate), colour);
+            return;
+        }
+        
         turn++;
         Colour nextTurnColour = colour == Colour.Black ? Colour.White : Colour.Black;
         bool kingIsCheck = kings[(int)nextTurnColour].IsCheck();
@@ -240,13 +247,16 @@ public class Board : Node2D
             {
                 if (!move.noPreview)
                 {
-                    GD.Print(move.piece.GetType() + " " + move.piece.colour + " at " + move.piece.pos);
+                    //GD.Print(move.piece.GetType() + " " + move.piece.colour + " at " + move.piece.pos);
                     checkmate = false;
                     break;
                 }
             }
             if (checkmate)
+            {
                 EmitSignal(nameof(Checkmate), colour);
+                return;
+            }
         }
         if (settings.playAI && settings.AIColour == nextTurnColour)
             EmitSignal(nameof(AITurn));
